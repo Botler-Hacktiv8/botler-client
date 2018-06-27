@@ -2,10 +2,7 @@
 
 ## Stack-tech :dart:
 
-### Back-end :wrench:
-- [x] Expressjs
-- [x] MongoDB
-- [x] Mongoose
-- [x] Mocha & Chai (TDD)
-- [x] Istanbul for Code Coverage
-- [x] Travis-CI
+### Front-end :wrench:
+- [x] React-Native
+- [x] Redux
+- [x] Dialog Flow
