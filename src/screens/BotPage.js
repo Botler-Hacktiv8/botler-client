@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native'
+import { Icon } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
-
 
 class BotPage extends Component {
   constructor() {
@@ -42,11 +42,12 @@ class BotPage extends Component {
   render() {
     return (
       <View>
-        <Button
+        <Icon
+          raised
+          name='microphone'
+          type='font-awesome'
+          color='red'
           onPress={this.onSpeak}
-          title="Press to talk"
-          color="#37B6DF"
-          accessibilityLabel="Press to talk"
         />
       </View>
     );
