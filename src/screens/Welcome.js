@@ -9,7 +9,7 @@ import {
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getBotlerDataAction } from './../store/action';
+import { getBotlerDataAction } from './../store/botler/action';
 
 class Welcome extends Component {
 
