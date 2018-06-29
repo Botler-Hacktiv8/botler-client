@@ -5,6 +5,11 @@ import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
 
+// @ redux config
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
+
 import { ACCESS_TOKEN } from '../../config';
 
 class BotPage extends Component {
@@ -56,16 +61,16 @@ class BotPage extends Component {
       console.log(error)
     }
   }
-
+  
   chatToBot = async() => {
     try {
       let userChat = { speaker: 'me', chat: this.state.chatText }
       let arrayChat = this.state.showChat
       arrayChat.push(userChat)
       this.setState({ showChat: arrayChat })
-      this.setState({ chatText: ''})
       const dialogflowResponse = await this.getDialogFlow(userChat.chat);
       console.log(this.state.showResponse)
+      this.setState({ chatText: ''})
       if (this.state.showResponse != null) {
         Tts.speak(dialogflowResponse.data.result.fulfillment.speech);
         // ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
@@ -104,6 +109,15 @@ class BotPage extends Component {
           break;
       }
     }
+  }
+
+  clickTaskHandle = () => {
+    console.log('clickTaskHandle');
+    this.props.getAllTaskAction(`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjM1ZGU2ZTlhY2M4NzRlYjFmYjcxY2MiLCJlbWFpbCI6InVzZXJnbWFpbEBnbWFpbC5jb20iLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTMwMjU3MDA2fQ.5jce6NawDXJfv8wBb81JGrVbo2sTpcWLfin9zxIYKys`);
+    const paylod = {
+      text: `This is task from react native`
+    }
+    this.props.postTaskAction();
   }
 
   render() {
@@ -147,10 +161,24 @@ class BotPage extends Component {
             onPress={this.onSpeak}
           />
         </View>
+        <Button onPress={ this.clickTaskHandle } title="Task Testing" />
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  taskData: state.taskState.taskData,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getAllTaskAction,
+  postTaskAction,
+  updateTaskAction,
+  deleteTaskAction
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(BotPage);
 
 const styles = StyleSheet.create({
   container: {
@@ -179,5 +207,3 @@ const styles = StyleSheet.create({
     height: '100%'
   }
 })
-
-export default BotPage;

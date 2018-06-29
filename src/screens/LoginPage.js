@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getBotlerDataAction } from './../store/action';
+import { getBotlerDataAction } from './../store/botler/action';
 import { black } from 'ansi-colors';
 
 class Welcome extends Component {
