@@ -1,4 +1,4 @@
-import { EXAMPLE_ACTION } from './action-type';
+import { EXAMPLE_ACTION } from './../action-type';
 
 const getBotlerData = (payload) => ({
   type: EXAMPLE_ACTION,
