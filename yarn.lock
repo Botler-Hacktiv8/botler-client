@@ -4345,6 +4345,10 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
+react-native-timeline-listview@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-timeline-listview/-/react-native-timeline-listview-0.2.3.tgz#e46b7f0fd2c2206329eee6194795e03899afe882"
+
 react-native-tts@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/react-native-tts/-/react-native-tts-1.5.0.tgz#1eb8b163e262f2ef7a73b48a090ffb6ff2bb8fac"
