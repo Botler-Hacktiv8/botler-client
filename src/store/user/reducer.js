@@ -1,15 +1,15 @@
-import { EXAMPLE_ACTION } from './action-type';
+import { GET_PROFILE } from './../action-type';
 
 const initialState = {
-  botlerData: []
+  userData: []
 }
 
 const reducer = (state = {...initialState}, action) => {
   switch (action.type) {
-    case EXAMPLE_ACTION:
+    case GET_PROFILE:
       return {
         ...state,
-        botlerData: action.payload,
+        userData: action.payload,
       }
     default:
       return state;
