@@ -16,6 +16,10 @@ const RootStackNav = createStackNavigator({
   Bot: BotPage
 }, {
   initialRouteName: 'Welcome',
+  headerMode: 'none',
+    navigationOptions: {
+        headerVisible: false,
+    }
 })
 
 export default class App extends Component {
