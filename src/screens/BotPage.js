@@ -25,11 +25,15 @@ class BotPage extends Component {
   }
 
   componentWillMount () {
-    let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of an assistance for today?' }
+    let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of assistance today?' }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
     Tts.speak('Greetings, how may I be of assistance today?')
+  }
+
+  addData = (responseData) => {
+    
   }
 
   getDialogFlow = async(msg) => { 
@@ -48,7 +52,12 @@ class BotPage extends Component {
           'Authorization': `Bearer ${ACCESS_TOKEN}`,
         },
       })
-      let botReply = { speaker: 'Botler', chat: response.data.result.fulfillment.speech }
+      let speech = response.data.result.fulfillment.speech
+      let botReply = { speaker: 'Botler', chat: speech }
+      Tts.speak(speech);
+      if (speech == 'Understood, i will arrange it for you. Please wait a moment') {
+        this.addData(response.data.result.contexts[1].parameters)
+      }
       let currentArray = this.state.showChat
       currentArray.push(botReply)
       this.setState({
@@ -62,6 +71,7 @@ class BotPage extends Component {
     }
   }
   
+  //For text chat input
   chatToBot = async() => {
     try {
       let userChat = { speaker: 'me', chat: this.state.chatText }
@@ -69,32 +79,27 @@ class BotPage extends Component {
       arrayChat.push(userChat)
       this.setState({ showChat: arrayChat })
       const dialogflowResponse = await this.getDialogFlow(userChat.chat);
-      console.log(this.state.showResponse)
       this.setState({ chatText: ''})
-      if (this.state.showResponse != null) {
-        Tts.speak(dialogflowResponse.data.result.fulfillment.speech);
-        // ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
-        // console.log(dialogflowResponse.data)
-      }
     } catch (error) {
       console.log(error)
     }
   }
 
+  //For speach to text
   onSpeak = async() => {
     try {
       const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.ENGLISH);
-      console.log(spokenText)
-      let userChat = { speaker: 'me', chat: spokenText }
-      let arrayChat = this.state.showChat
-      arrayChat.push(userChat)
-      this.setState({showChat: arrayChat})
-      const dialogflowResponse = await this.getDialogFlow(spokenText);
-      console.log(this.state.showResponse)
-      if (this.state.showResponse != null) {
-        Tts.speak(dialogflowResponse.data.result.fulfillment.speech);
-        // ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
-        // console.log(dialogflowResponse.data)
+      console.log('spokenText: ',spokenText)
+      if (spokenText == 'show tasks') {
+        this.props.navigation.navigate('ListTask')
+      } else if (spokenText == 'log out') {
+        this.logout()
+      } else {
+        let userChat = { speaker: 'me', chat: spokenText }
+        let arrayChat = this.state.showChat
+        arrayChat.push(userChat)
+        this.setState({showChat: arrayChat})
+        const dialogflowResponse = await this.getDialogFlow(spokenText);
       }
     } catch (error) {
       switch(error) {
@@ -109,6 +114,10 @@ class BotPage extends Component {
           break;
       }
     }
+  }
+
+  logout = () => {
+    this.props.navigation.goBack()
   }
 
   clickTaskHandle = () => {

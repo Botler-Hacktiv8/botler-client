@@ -5,7 +5,8 @@ import { YellowBox } from 'react-native';
 // @ require components
 import LoginPage from './src/screens/LoginPage';
 import BotPage from './src/screens/BotPage';
-import RegisterPage from './src/screens/RegisterPage'
+import RegisterPage from './src/screens/RegisterPage';
+import ListTaskPage from './src/screens/ListTaskPage'
 
 // @ redux setup
 import { Provider } from 'react-redux';
@@ -15,7 +16,8 @@ import store from './src/store/index';
 const RootStackNav = createStackNavigator({
   Login: LoginPage,
   Register: RegisterPage,
-  Bot: BotPage
+  Bot: BotPage,
+  ListTask: ListTaskPage
 }, {
   initialRouteName: 'Login',
   headerMode: 'none',
