@@ -63,9 +63,9 @@ class BotPage extends Component {
       let arrayChat = this.state.showChat
       arrayChat.push(userChat)
       this.setState({ showChat: arrayChat })
+      this.setState({ chatText: ''})
       const dialogflowResponse = await this.getDialogFlow(userChat.chat);
       console.log(this.state.showResponse)
-      this.setState({ chatText: ''})
       if (this.state.showResponse != null) {
         Tts.speak(dialogflowResponse.data.result.fulfillment.speech);
         // ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
