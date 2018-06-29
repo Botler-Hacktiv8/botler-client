@@ -3,10 +3,14 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 import reducer from './botler/reducer';
+import taskReducer from './task/reducer';
+import userReducer from './user/reducer';
 
 const rootReducers = combineReducers({
-  botlerState: reducer
-})
+  botlerState: reducer,
+  taskState: taskReducer,
+  userState: userReducer
+});
 
 const store = createStore(
   rootReducers,
