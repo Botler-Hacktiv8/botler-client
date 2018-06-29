@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Text } from 'react-native'
-import { Icon } from 'react-native-elements';
+import { View, Button, StyleSheet, Text, ScrollView } from 'react-native'
+import { Icon, FormInput } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
@@ -13,13 +13,21 @@ class BotPage extends Component {
     this.onSpeak = this.onSpeak.bind(this);
     this.getDialogFlow = this.getDialogFlow.bind(this);
     this.state = {
-      showResponse: null,
-      showCommand: null,
-      recievedData: null
+      showChat: [],
+      recievedData: null,
+      chatText: '',
     };
   }
 
-  async getDialogFlow(msg) { 
+  componentWillMount () {
+    let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of an assistance for today?' }
+    let arrayChat = []
+    arrayChat.push(greetChat)
+    this.setState({showChat: arrayChat})
+    Tts.speak('Greetings, how may I be of assistance today?')
+  }
+
+  getDialogFlow = async(msg) => { 
     try {
       const response = await axios({
         method: 'post',
@@ -35,8 +43,11 @@ class BotPage extends Component {
           'Authorization': `Bearer ${ACCESS_TOKEN}`,
         },
       })
+      let botReply = { speaker: 'Botler', chat: response.data.result.fulfillment.speech }
+      let currentArray = this.state.showChat
+      currentArray.push(botReply)
       this.setState({
-        showResponse: response.data.result.fulfillment.speech,
+        showChat: currentArray,
         recievedData: response.data.result.parameters
       });
       console.log(response)
@@ -46,17 +57,39 @@ class BotPage extends Component {
     }
   }
 
-  async onSpeak() {
+  chatToBot = async() => {
+    try {
+      let userChat = { speaker: 'me', chat: this.state.chatText }
+      let arrayChat = this.state.showChat
+      arrayChat.push(userChat)
+      this.setState({ showChat: arrayChat })
+      const dialogflowResponse = await this.getDialogFlow(userChat.chat);
+      console.log(this.state.showResponse)
+      this.setState({ chatText: ''})
+      if (this.state.showResponse != null) {
+        Tts.speak(dialogflowResponse.data.result.fulfillment.speech);
+        // ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
+        // console.log(dialogflowResponse.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  onSpeak = async() => {
     try {
       const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.ENGLISH);
       console.log(spokenText)
-      this.setState({showCommand: spokenText})
+      let userChat = { speaker: 'me', chat: spokenText }
+      let arrayChat = this.state.showChat
+      arrayChat.push(userChat)
+      this.setState({showChat: arrayChat})
       const dialogflowResponse = await this.getDialogFlow(spokenText);
       console.log(this.state.showResponse)
       if (this.state.showResponse != null) {
         Tts.speak(dialogflowResponse.data.result.fulfillment.speech);
-        ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
-        console.log(dialogflowResponse.data)
+        // ToastAndroid.show(dialogflowResponse.data.result.fulfillment.speech, ToastAndroid.LONG);
+        // console.log(dialogflowResponse.data)
       }
     } catch (error) {
       switch(error) {
@@ -74,20 +107,45 @@ class BotPage extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <View style={styles.container}>
-        <View style={styles.styleResponse}>
-          <Text>{ this.state.showResponse }</Text>
+        <View style={styles.avatarPlacement}>
+          <Text>BOT AVATAR</Text>
         </View>
-        <Icon
-          raised
-          name='microphone'
-          type='font-awesome'
-          color='red'
-          onPress={this.onSpeak}
-        />
-        <View style={styles.styleCommand}>
-          <Text>{ this.state.showCommand }</Text>
+        <ScrollView 
+          ref={ref => this.scrollView = ref}
+          onContentSizeChange={(contentWidth, contentHeight)=>{        
+              this.scrollView.scrollToEnd({animated: true});
+          }}
+        >
+        <View style={styles.chatRoom}>
+        { this.state.showChat.map((chatData, i) => (
+          <View style={styles.styleChat} key={'chat' + i}>
+            <Text style={{fontWeight: 'bold'}}>{ chatData.speaker }</Text>
+            <Text>{ chatData.chat }</Text>
+          </View>
+        ))
+        }
+        </View>
+        </ScrollView>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingBottom: 10 }}>
+          <Icon
+            name='arrow-circle-right'
+            type='font-awesome'
+            color='#00a9ff'
+            size={35}
+            onPress={this.chatToBot}
+          />
+          <View style={{width: '75%', marginBottom: 10}}>
+            <FormInput onChangeText={(chatText) => this.setState({chatText})} value={this.state.chatText} />
+          </View>
+          <Icon
+            name='microphone'
+            type='font-awesome'
+            color='red'
+            onPress={this.onSpeak}
+          />
         </View>
       </View>
     );
@@ -101,7 +159,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  styleResponse: {
+  avatarPlacement: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
@@ -110,14 +168,15 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     margin: 5
   },
-  styleCommand: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  styleChat: {
+    borderRadius: 10,
+    width: '100%',
     padding: 10,
-    backgroundColor: '#adffe6',
-    borderWidth: 2,
-    borderRadius: 3,
-    margin: 5
+  },
+  chatRoom: {
+    flex: 1,
+    padding: 3,
+    height: '100%'
   }
 })
 
