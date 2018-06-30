@@ -97,7 +97,7 @@ class BotPage extends Component {
     }
   }
   
-  //For text chat input
+  //@ text chat input
   chatToBot = async() => {
     try {
       let userChat = { speaker: 'me', chat: this.state.chatText }
@@ -111,14 +111,14 @@ class BotPage extends Component {
     }
   }
 
-  //For speach to text
+  //@ speach to text
   onSpeak = async() => {
     try {
-      const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.ENGLISH);
+      const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.INDONESIAN);
       console.log('spokenText: ',spokenText)
-      if (spokenText == 'show tasks') {
+      if (spokenText == 'lihat aktifitas') {
         this.props.navigation.navigate('ListTask')
-      } else if (spokenText == 'log out') {
+      } else if (spokenText == 'keluar') {
         this.logout()
       } else {
         let userChat = { speaker: 'me', chat: spokenText }

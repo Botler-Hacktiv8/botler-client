@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     width: 400,
     height: 50,
     alignItems:'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderRadius: 20
   },
   buttonSubmit: {
     flexDirection: 'row',
@@ -130,9 +131,10 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: '#21ff46',
-    marginBottom: 2
+    marginBottom: 3,
+    borderRadius: 20
   }
 })
 
