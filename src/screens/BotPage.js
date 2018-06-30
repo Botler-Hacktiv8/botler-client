@@ -145,8 +145,8 @@ class BotPage extends Component {
     console.log('logout', this.state._UserToken);
     axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state._UserToken } })
       .then(() => {
-        // this.props.navigation.goBack();
         this.props.screenProps.logout();
+        // this.props.navigation.goBack();
       }).catch(e => {
         console.log('Failed to logout!', e);
       });

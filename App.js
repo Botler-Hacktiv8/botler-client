@@ -17,8 +17,6 @@ import store from './src/store/index';
 const RootStackNav = createStackNavigator({
   Login: LoginPage,
   Register: RegisterPage,
-  Bot: BotPage,
-  ListTask: ListTaskPage
 }, {
   initialRouteName: 'Login',
   headerMode: 'none',
@@ -27,11 +25,12 @@ const RootStackNav = createStackNavigator({
     }
 })
 
+// @ drawer navigation
 const RootDrawerNav = createDrawerNavigator({
-  Bot: BotPage,
+  Home: BotPage,
   ListTask: ListTaskPage,
 }, {
-  initialRouteName: 'Bot'
+  initialRouteName: 'Home'
 })
 
 export default class App extends Component {

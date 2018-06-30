@@ -40,6 +40,7 @@ class Welcome extends Component {
       .then(response => {
         this._storeToken(response.headers['x-auth']);
         this.props.screenProps.login();
+        // this.props.navigation.navigate('Home')
       }).catch(e => {
         console.log(`Failed login`, e);
       })
