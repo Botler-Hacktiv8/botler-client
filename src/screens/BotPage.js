@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage } from 'react-native'
-import { Icon, FormInput } from 'react-native-elements';
+import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native'
+import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
@@ -165,6 +165,17 @@ class BotPage extends Component {
     console.log(this.state)
     return (
       <View style={styles.container}>
+        <Header 
+          rightComponent={
+          <TouchableOpacity onPress={this.logout}>
+            <Icon
+              name='sign-out'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+        />
         <View style={styles.avatarPlacement}>
           <Text>BOT AVATAR</Text>
         </View>
@@ -203,7 +214,6 @@ class BotPage extends Component {
           />
         </View>
         <Button onPress={ this.clickTaskHandle } title="Task Testing" />
-        <Button onPress={ this.logout } title="Logout" />
       </View>
     );
   }
@@ -225,8 +235,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(BotPage);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'column',
     backgroundColor: '#F5FCFF',
   },
   avatarPlacement: {
