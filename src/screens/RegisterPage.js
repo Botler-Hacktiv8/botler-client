@@ -1,23 +1,44 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { FormInput, FormLabel, Icon } from 'react-native-elements'
+import { View, TouchableOpacity, Text, StyleSheet, AsyncStorage } from 'react-native';
+import { FormInput, FormLabel, Icon } from 'react-native-elements';
+import axios from 'axios';
 
 class RegisterPage extends Component {
 
-  constructor(){
-    super()
-    this.state = {
-      firstname: '',
-      lastname: '',
-      email: '',
-      password: '',
-      confirm: ''
-    }
+  state = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirm: ''
   }
 
-  registerUser = () => {
-    //Register new user
-    //Connect to redux
+  registerUser = async () => {
+    const { firstName, lastName, email, password } = this.state;
+    const payload = {
+      firstName,
+      lastName,
+      email,
+      password
+    }
+
+    // console.log('register user', payload);
+    axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/register`, payload)
+      .then(response => {
+        this._storeToken(response.headers['x-auth']);
+        this.props.screenProps.login();
+        // this.props.navigation.navigate('Home')
+      }).catch(e => {
+        console.log(`Register failed`, e);
+      })
+  }
+
+  _storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('UserToken', token);
+    } catch (e) {
+      console.log('Failed save user token!', e);
+    }
   }
 
   render() {
@@ -28,23 +49,20 @@ class RegisterPage extends Component {
             <FormLabel>First Name</FormLabel>
             <FormInput 
               placeholder="Please enter your first name..."
-              onChangeText={(firstname) => this.setState({firstname})}
-              value={this.state.firstname}
-              secureTextEntry={true}
+              onChangeText={(firstName) => this.setState({firstName})}
+              value={this.state.firstName}
             />
             <FormLabel>Last Name</FormLabel>
             <FormInput 
               placeholder="Please enter your last name..."
-              onChangeText={(lastname) => this.setState({lastname})}
-              value={this.state.lastname}
-              secureTextEntry={true}
+              onChangeText={(lastName) => this.setState({lastName})}
+              value={this.state.lastName}
             />
             <FormLabel>Email</FormLabel>
             <FormInput 
               placeholder="Please enter you email address..."
               onChangeText={(email) => this.setState({email})}
               value={this.state.email}
-              secureTextEntry={true}
             />
             <FormLabel>Password</FormLabel>
             <FormInput 
