@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  ScrollView
 } from 'react-native';
 import { FormInput, FormLabel, Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -56,11 +57,11 @@ class Welcome extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          BOTLER
-        </Text>
-        <View style={{flex: 0.4}}>
+        <View style={styles.container}>
+          <Text style={styles.welcome}>
+            BOTLER
+          </Text>
+          <View style={{ flex: 0.9, margin: 1}}>
           <FormLabel>Email</FormLabel>
           <FormInput 
             placeholder="Please enter your email address..."
@@ -74,18 +75,18 @@ class Welcome extends Component {
             value={this.state.password}
             secureTextEntry={true}
           />
-        </View>
-        <View style={{flex: 0.1}}>
           <TouchableOpacity onPress={this.loginUser}>
-            <Text style={{ color: 'orange', fontSize: 20, fontWeight: 'bold' }}>LOGIN</Text>
+            <View style={styles.loginButton}>
+              <Text style={{ color: 'orange', fontSize: 20, fontWeight: 'bold' }}>LOGIN</Text>
+            </View>
           </TouchableOpacity>
-        </View>
-        <View style={{flex: 0.1}}>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
-            <Text style={{color: '#0000EE', fontSize: 16}}>Don't have an account yet? Register now!</Text>
+            <View style={styles.registerButton}>
+              <Text style={{color: '#0000EE', fontSize: 16}}>SIGN UP</Text>
+            </View>
           </TouchableOpacity>
+          </View>
         </View>
-      </View>
     );
   }
 }
@@ -105,9 +106,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'column',
     backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   welcome: {
     fontSize: 40,
@@ -115,4 +117,25 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontWeight: 'bold'
   },
+  loginButton: {
+    flexDirection: 'column',
+    borderColor: 'orange',
+    borderWidth: 3,
+    width: 400,
+    height: 50,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    marginBottom: 3,
+    marginTop: 30,
+  },
+  registerButton: {
+    flexDirection: 'column',
+    borderColor: 'orange',
+    width: 400,
+    height: 50,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderRadius: 20
+  }
 });
