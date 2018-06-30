@@ -4,6 +4,10 @@ import { Icon, FormInput } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
+import PushNotification from 'react-native-push-notification'
+import Geocoder from 'react-native-geocoder'
+import Permissions from 'react-native-permissions'
+import distance from 'google-distance'
 
 // @ redux config
 import { bindActionCreators } from 'redux';
@@ -114,10 +118,6 @@ class BotPage extends Component {
           break;
       }
     }
-  }
-
-  logout = () => {
-    this.props.navigation.goBack()
   }
 
   clickTaskHandle = () => {
