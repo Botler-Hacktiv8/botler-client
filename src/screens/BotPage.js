@@ -26,7 +26,7 @@ class BotPage extends Component {
   }
 
   componentWillMount () {
-    this.props.navigation.toggleDrawer();
+    // retrieve token
     this._retrieveToken();
     let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of assistance today?' }
     let arrayChat = []
@@ -145,7 +145,7 @@ class BotPage extends Component {
     console.log('logout', this.state._UserToken);
     axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state._UserToken } })
       .then(() => {
-        this.props.navigation.goBack();
+        // this.props.navigation.goBack();
         this.props.screenProps.logout();
       }).catch(e => {
         console.log('Failed to logout!', e);
@@ -162,7 +162,6 @@ class BotPage extends Component {
     console.log(this.state)
     return (
       <View style={styles.container}>
-        <RootDrawerNav />
         <View style={styles.avatarPlacement}>
           <Text>BOT AVATAR</Text>
         </View>

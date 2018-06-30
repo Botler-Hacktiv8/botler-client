@@ -40,15 +40,11 @@ export default class App extends Component {
   }
 
   login = () => {
-    this.setState({
-      isLogin: true
-    })
+    this.setState({ isLogin: true });
   }
 
   logout = () => {
-    this.setState({
-      isLogin: false
-    })
+    this.setState({ isLogin: false });
   }
 
   componentDidMount = async () => {

@@ -36,11 +36,9 @@ class Welcome extends Component {
       email,
       password
     }
-
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/login`, payload)
       .then(response => {
         this._storeToken(response.headers['x-auth']);
-        // this.props.navigation.navigate('Bot')
         this.props.screenProps.login();
       }).catch(e => {
         console.log(`Failed login`, e);
@@ -51,7 +49,7 @@ class Welcome extends Component {
     try {
       await AsyncStorage.setItem('UserToken', token);
     } catch (e) {
-      console.log('Failed save user token!', error);
+      console.log('Failed save user token!', e);
     }
   }
 
