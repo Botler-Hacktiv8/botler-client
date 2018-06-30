@@ -26,6 +26,7 @@ class BotPage extends Component {
   }
 
   componentWillMount () {
+    this.props.navigation.toggleDrawer();
     this._retrieveToken();
     let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of assistance today?' }
     let arrayChat = []
@@ -34,15 +35,26 @@ class BotPage extends Component {
     Tts.speak('Greetings, how may I be of assistance today?')
   }
   
+  // @ retrive token from local storage
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
       this.setState({ _UserToken: value });
      } catch (e) {
-       console.log('Failed UserToken from stoge', e);
+       console.log('Failed UserToken from storage', e);
      }
   }
 
+  // @ remove token from local storage
+  _removeToken = async () => {
+    try {
+      await AsyncStorage.removeItem('UserToken');
+    } catch(e) {
+      console.log('Failed remove UserToken from storage');
+    }
+  }
+
+  // @ get response data from dialog-flow
   addData = (responseData) => {
     
   }
@@ -127,23 +139,30 @@ class BotPage extends Component {
     }
   }
 
+  // @ remove token and move to login page
   logout = () => {
-    this.props.navigation.goBack()
+    this._removeToken();
+    console.log('logout', this.state._UserToken);
+    axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state._UserToken } })
+      .then(() => {
+        this.props.navigation.goBack();
+        this.props.screenProps.logout();
+      }).catch(e => {
+        console.log('Failed to logout!', e);
+      });
   }
 
+  // @ testing show task list
   clickTaskHandle = () => {
     console.log('clickTaskHandle', this.state._UserToken);
     this.props.getAllTaskAction(this.state._UserToken);
-    // const paylod = {
-    //   text: `This is task from react native`
-    // }  
-    // this.props.postTaskAction();
   }
 
   render() {
     console.log(this.state)
     return (
       <View style={styles.container}>
+        <RootDrawerNav />
         <View style={styles.avatarPlacement}>
           <Text>BOT AVATAR</Text>
         </View>
@@ -182,6 +201,7 @@ class BotPage extends Component {
           />
         </View>
         <Button onPress={ this.clickTaskHandle } title="Task Testing" />
+        <Button onPress={ this.logout } title="Logout" />
       </View>
     );
   }

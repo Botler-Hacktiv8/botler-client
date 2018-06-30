@@ -40,7 +40,8 @@ class Welcome extends Component {
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/login`, payload)
       .then(response => {
         this._storeToken(response.headers['x-auth']);
-        this.props.navigation.navigate('Bot')
+        // this.props.navigation.navigate('Bot')
+        this.props.screenProps.login();
       }).catch(e => {
         console.log(`Failed login`, e);
       })
