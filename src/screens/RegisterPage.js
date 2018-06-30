@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, AsyncStorage } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, AsyncStorage, ScrollView } from 'react-native';
 import { FormInput, FormLabel, Icon } from 'react-native-elements';
 import axios from 'axios';
 
@@ -10,7 +10,8 @@ class RegisterPage extends Component {
     lastName: '',
     email: '',
     password: '',
-    confirm: ''
+    confirm: '',
+    address: ''
   }
 
   registerUser = async () => {
@@ -43,26 +44,37 @@ class RegisterPage extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.registerTitle}>REGISTER</Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.registerTitle}>REGISTER</Text>
           <View style={{ flex: 0.9 }}>
-            <FormLabel>First Name</FormLabel>
-            <FormInput 
-              placeholder="Please enter your first name..."
-              onChangeText={(firstName) => this.setState({firstName})}
-              value={this.state.firstName}
-            />
-            <FormLabel>Last Name</FormLabel>
-            <FormInput 
-              placeholder="Please enter your last name..."
-              onChangeText={(lastName) => this.setState({lastName})}
-              value={this.state.lastName}
-            />
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'column', width: '50%' }}>
+                <FormLabel>First Name</FormLabel>
+                <FormInput 
+                  onChangeText={(firstName) => this.setState({firstName})}
+                  value={this.state.firstName}
+                />
+              </View>
+              <View style={{ flexDirection: 'column',  width: '50%'}}>
+                <FormLabel>Last Name</FormLabel>
+                <FormInput 
+                  onChangeText={(lastName) => this.setState({lastName})}
+                  value={this.state.lastName}
+                />
+              </View>
+            </View>
             <FormLabel>Email</FormLabel>
             <FormInput 
               placeholder="Please enter you email address..."
               onChangeText={(email) => this.setState({email})}
               value={this.state.email}
+            />
+            <FormLabel>Address</FormLabel>
+            <FormInput 
+              placeholder="Please enter you address address..."
+              onChangeText={(address) => this.setState({address})}
+              value={this.state.address}
             />
             <FormLabel>Password</FormLabel>
             <FormInput 
@@ -98,7 +110,8 @@ class RegisterPage extends Component {
               <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>CANCEL</Text>
             </View>
           </TouchableOpacity>
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -134,6 +147,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#21ff46',
     marginBottom: 3,
+    marginTop: 30,
     borderRadius: 20
   }
 })
