@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from 'react-native';
 import { FormInput, FormLabel, Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -13,6 +14,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getBotlerDataAction } from './../store/botler/action';
 import { black } from 'ansi-colors';
+import axios from 'axios';
 
 class Welcome extends Component {
 
@@ -28,11 +30,28 @@ class Welcome extends Component {
     this.props.getBotlerDataAction();
   }
 
-  loginUser = () => {
-    //Action to redux login
-    //If success then change navigation to botpage
+  loginUser = async () => {
+    const { email, password } = this.state;
+    const payload = {
+      email,
+      password
+    }
+    axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/login`, payload)
+      .then(response => {
+        this._storeToken(response.headers['x-auth']);
+        this.props.screenProps.login();
+        // this.props.navigation.navigate('Home')
+      }).catch(e => {
+        console.log(`Failed login`, e);
+      })
+  }
 
-    this.props.navigation.navigate('Bot')
+  _storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('UserToken', token);
+    } catch (e) {
+      console.log('Failed save user token!', e);
+    }
   }
 
   render() {

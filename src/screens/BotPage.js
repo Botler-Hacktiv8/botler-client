@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Text, ScrollView } from 'react-native'
+import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage } from 'react-native'
 import { Icon, FormInput } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
@@ -25,17 +25,40 @@ class BotPage extends Component {
       showChat: [],
       recievedData: null,
       chatText: '',
+      _UserToken: '',
     };
   }
 
   componentWillMount () {
+    // retrieve token
+    this._retrieveToken();
     let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of assistance today?' }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
     Tts.speak('Greetings, how may I be of assistance today?')
   }
+  
+  // @ retrive token from local storage
+  _retrieveToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('UserToken');
+      this.setState({ _UserToken: value });
+     } catch (e) {
+       console.log('Failed UserToken from storage', e);
+     }
+  }
 
+  // @ remove token from local storage
+  _removeToken = async () => {
+    try {
+      await AsyncStorage.removeItem('UserToken');
+    } catch(e) {
+      console.log('Failed remove UserToken from storage');
+    }
+  }
+
+  // @ get response data from dialog-flow
   addData = (responseData) => {
     
   }
@@ -120,13 +143,23 @@ class BotPage extends Component {
     }
   }
 
+  // @ remove token and move to login page
+  logout = () => {
+    this._removeToken();
+    console.log('logout', this.state._UserToken);
+    axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state._UserToken } })
+      .then(() => {
+        this.props.screenProps.logout();
+        // this.props.navigation.goBack();
+      }).catch(e => {
+        console.log('Failed to logout!', e);
+      });
+  }
+
+  // @ testing show task list
   clickTaskHandle = () => {
-    console.log('clickTaskHandle');
-    this.props.getAllTaskAction(`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjM1ZGU2ZTlhY2M4NzRlYjFmYjcxY2MiLCJlbWFpbCI6InVzZXJnbWFpbEBnbWFpbC5jb20iLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTMwMjU3MDA2fQ.5jce6NawDXJfv8wBb81JGrVbo2sTpcWLfin9zxIYKys`);
-    const paylod = {
-      text: `This is task from react native`
-    }
-    this.props.postTaskAction();
+    console.log('clickTaskHandle', this.state._UserToken);
+    this.props.getAllTaskAction(this.state._UserToken);
   }
 
   render() {
@@ -171,6 +204,7 @@ class BotPage extends Component {
           />
         </View>
         <Button onPress={ this.clickTaskHandle } title="Task Testing" />
+        <Button onPress={ this.logout } title="Logout" />
       </View>
     );
   }
