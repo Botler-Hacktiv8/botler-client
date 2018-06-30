@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, AsyncStorage, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, AsyncStorage, ScrollView, ToastAndroid } from 'react-native';
 import { FormInput, FormLabel, Icon } from 'react-native-elements';
 import axios from 'axios';
 
@@ -27,6 +27,7 @@ class RegisterPage extends Component {
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/register`, payload)
       .then(response => {
         this._storeToken(response.headers['x-auth']);
+        ToastAndroid.show('Register Success', ToastAndroid.SHORT);
         this.props.screenProps.login();
         // this.props.navigation.navigate('Home')
       }).catch(e => {
