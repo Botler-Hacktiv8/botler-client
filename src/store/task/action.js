@@ -4,7 +4,8 @@ import axios from 'axios';
 // @ get all task
 export const getAllTaskAction = (token) => {
   return (dispatch) => {
-    axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/me`, { 'x-auth': token })
+    console.log('getAllTaskAction', token);
+    axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, { headers: { 'x-auth': token } })
       .then(response => {
         dispatch(getAllTask(response.data.tasks));
       }).catch((e) => {
@@ -23,7 +24,7 @@ export const postTaskAction = (payload, token) => {
   return (dispatch, getState) => {
     // const postData = getState().taskState.taskData;
     // const newPostData = [...postData];
-    axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com`, payload, { 'x-auth': token })
+    axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, payload, { headers: { 'x-auth': token } })
       .then(response => {
         // newPostData.push(response.data.task);
         dispatch(postTask(response.data.task));
@@ -41,7 +42,7 @@ const postTask = (payload) => ({
 // @ update task
 export const updateTaskAction = (taskId, payload, token) => {
   return (dispatch) => {
-    axios.patch(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/${taskId}`, payload, { 'x-auth': token })
+    axios.patch(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, payload, { headers: { 'x-auth': token } })
       .then(response => {
         dispatch(updateTask(response.data.task));
       }).catch((e) => {
@@ -58,7 +59,7 @@ const updateTask = (payload) => ({
 // @ delete task
 export const deleteTaskAction = (taskId, payload, token) => {
   return (dispatch) => {
-    axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/${taskId}`, { 'x-auth': token })
+    axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, { headers: { 'x-auth': token } })
       .then(response => {
         dispatch(deleteTask(response.data.task));
       }).catch((e) => {
