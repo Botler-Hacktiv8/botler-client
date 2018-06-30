@@ -48,10 +48,6 @@
         <action android:name="com.google.android.c2dm.intent.RECEIVE" />
       </intent-filter>
     </service>
-
-    <meta-data
-      android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyCPIZIYZ5HOVzMVJv1dm9Pe3z4z2A4fjcI"/>
           
     </application>
 
