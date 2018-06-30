@@ -5,6 +5,7 @@ import Timeline from 'react-native-timeline-listview'
 class ListTaskPage extends Component {
   constructor() {
     super()
+    //Dummy data
     this.data = [
       {time: '19:00', title: 'Event 1', description: 'Event 1 Description'},
       {time: '10:45', title: 'Event 2', description: 'Event 2 Description'},

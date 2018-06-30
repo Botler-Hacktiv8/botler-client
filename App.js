@@ -7,6 +7,7 @@ import LoginPage from './src/screens/LoginPage';
 import BotPage from './src/screens/BotPage';
 import RegisterPage from './src/screens/RegisterPage';
 import ListTaskPage from './src/screens/ListTaskPage';
+import TaskDetailPage from './src/screens/TaskDetailPage'
 import Welcome from './src/screens/Welcome';
 
 // @ redux setup
@@ -29,6 +30,7 @@ const RootStackNav = createStackNavigator({
 const RootDrawerNav = createDrawerNavigator({
   Home: BotPage,
   ListTask: ListTaskPage,
+  Detail: TaskDetailPage
 }, {
   initialRouteName: 'Home'
 })
