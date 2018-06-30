@@ -7,7 +7,6 @@ import axios from 'axios'
 import PushNotification from 'react-native-push-notification'
 import Geocoder from 'react-native-geocoder'
 import Permissions from 'react-native-permissions'
-import distance from 'google-distance'
 
 // @ redux config
 import { bindActionCreators } from 'redux';
