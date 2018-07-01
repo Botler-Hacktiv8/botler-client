@@ -7,19 +7,21 @@ import {
   ScrollView,
   AsyncStorage,
   TouchableOpacity,
-  Image
+  Image,
+  ToastAndroid
 } from 'react-native'
 import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
 import PushNotification from 'react-native-push-notification';
-import Permissions from 'react-native-permissions'
+import Permissions from 'react-native-permissions';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
+import { getProfileAction } from './../store/user/action';
 
 import { ACCESS_TOKEN } from '../../config';
 
@@ -46,13 +48,17 @@ class BotPage extends Component {
     Tts.getInitStatus().then(() => {
       Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
     });
+    
   }
   
   // @ retrive token from local storage
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
-      this.setState({ _UserToken: value });
+      console.log('_retrieveToken', value);
+      this.setState({ _UserToken: value }, () => {
+        this.props.getProfileAction(this.state._UserToken);
+      });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
      }
@@ -248,7 +254,8 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   getAllTaskAction,
   postTaskAction,
   updateTaskAction,
-  deleteTaskAction
+  deleteTaskAction,
+  getProfileAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BotPage);
