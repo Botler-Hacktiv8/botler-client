@@ -4,8 +4,7 @@ import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
-import PushNotification from 'react-native-push-notification'
-import Geocoder from 'react-native-geocoder'
+import PushNotification from 'react-native-push-notification';
 import Permissions from 'react-native-permissions'
 
 // @ redux config
@@ -61,7 +60,7 @@ class BotPage extends Component {
 
   // @ get response data from dialog-flow
   addData = (responseData) => {
-    
+    console.log('Fix data:', responseData);
   }
 
   getDialogFlow = async(msg) => { 
@@ -71,7 +70,7 @@ class BotPage extends Component {
         url: 'https://api.dialogflow.com/v1/query?v=20170712',
         data: JSON.stringify({
           query: msg,
-          lang: 'EN',
+          lang: 'ID',
           sessionId: 'somerandomthing'
         }),
         headers: {
@@ -83,8 +82,15 @@ class BotPage extends Component {
       let speech = response.data.result.fulfillment.speech
       let botReply = { speaker: 'Botler', chat: speech }
       Tts.speak(speech);
-      if (speech == 'Understood, i will arrange it for you. Please wait a moment') {
-        this.addData(response.data.result.contexts[1].parameters)
+      if (speech.includes('sedang saya proses')) {
+        let dataParameter;
+        response.data.result.contexts.forEach(element => {
+          if (element.name == 'membuataktivitasbaru-followup') {
+            dataParameter = element.parameters;
+            this.addData(dataParameter);
+          }
+        });
+        // this.addData(response.data.result.contexts[2].parameters);
       }
       let currentArray = this.state.showChat
       currentArray.push(botReply)
@@ -92,7 +98,7 @@ class BotPage extends Component {
         showChat: currentArray,
         recievedData: response.data.result.parameters
       });
-      console.log(response)
+      // console.log(response)
       return response;
     } catch (error) {
       console.log(error)
@@ -147,7 +153,6 @@ class BotPage extends Component {
   // @ remove token and move to login page
   logout = () => {
     this._removeToken();
-    console.log('logout', this.state._UserToken);
     axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state._UserToken } })
       .then(() => {
         this.props.screenProps.logout();
@@ -159,12 +164,12 @@ class BotPage extends Component {
 
   // @ testing show task list
   clickTaskHandle = () => {
-    console.log('clickTaskHandle', this.state._UserToken);
+    // console.log('clickTaskHandle', this.state._UserToken);
     this.props.getAllTaskAction(this.state._UserToken);
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return (
       <View style={styles.container}>
         <Header 
