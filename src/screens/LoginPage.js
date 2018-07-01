@@ -67,6 +67,7 @@ class Welcome extends Component {
           <FormInput 
             placeholder="Please enter your email address..."
             onChangeText={(email) => this.setState({email})}
+            autoCapitalize = 'none'
             value={this.state.email}
           />
           <FormLabel>Password</FormLabel>
@@ -74,6 +75,7 @@ class Welcome extends Component {
             placeholder="Please enter your password..."
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
+            autoCapitalize = 'none'
             secureTextEntry={true}
           />
           <TouchableOpacity onPress={this.loginUser}>

@@ -174,6 +174,15 @@ class BotPage extends Component {
       <View style={styles.container}>
         <Header 
           rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+            <Icon
+              name='plus'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+          leftComponent={
           <TouchableOpacity onPress={this.logout}>
             <Icon
               name='sign-out'
