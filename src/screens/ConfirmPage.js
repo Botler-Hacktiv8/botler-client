@@ -3,6 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { FormLabel, Icon } from 'react-native-elements'
 
 class ConfirmPage extends Component {
+
+  //@ add task to db
+  addTask = () => {
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -24,7 +30,7 @@ class ConfirmPage extends Component {
           </View>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <View style={ styles.buttonNo }>
               <Icon
                 name="times"
@@ -35,7 +41,7 @@ class ConfirmPage extends Component {
               <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>No</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.addTask}>
             <View style={ styles.buttonYes }>
               <Icon
                 name="check"
