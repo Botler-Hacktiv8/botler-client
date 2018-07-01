@@ -62,32 +62,34 @@ class Welcome extends Component {
           <Text style={styles.welcome}>
             BOTLER
           </Text>
-          <View style={{ flex: 0.9, margin: 1}}>
-          <FormLabel>Email</FormLabel>
-          <FormInput 
-            placeholder="Please enter your email address..."
-            onChangeText={(email) => this.setState({email})}
-            autoCapitalize = 'none'
-            value={this.state.email}
-          />
-          <FormLabel>Password</FormLabel>
-          <FormInput 
-            placeholder="Please enter your password..."
-            onChangeText={(password) => this.setState({password})}
-            value={this.state.password}
-            autoCapitalize = 'none'
-            secureTextEntry={true}
-          />
-          <TouchableOpacity onPress={this.loginUser}>
-            <View style={styles.loginButton}>
-              <Text style={{ color: 'orange', fontSize: 20, fontWeight: 'bold' }}>LOGIN</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
-            <View style={styles.registerButton}>
-              <Text style={{color: '#0000EE', fontSize: 16}}>SIGN UP</Text>
-            </View>
-          </TouchableOpacity>
+          <View>
+            <FormLabel>Email</FormLabel>
+            <FormInput 
+              placeholder="Please enter your email address..."
+              onChangeText={(email) => this.setState({email})}
+              autoCapitalize = 'none'
+              value={this.state.email}
+            />
+            <FormLabel>Password</FormLabel>
+            <FormInput 
+              placeholder="Please enter your password..."
+              onChangeText={(password) => this.setState({password})}
+              value={this.state.password}
+              autoCapitalize = 'none'
+              secureTextEntry={true}
+            />
+          </View>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <TouchableOpacity onPress={this.loginUser}>
+              <View style={styles.loginButton}>
+                <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>LOGIN</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
+              <View style={styles.registerButton}>
+                <Text style={{color: '#0000EE', fontSize: 16, fontWeight: 'bold' }}>SIGN UP</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
     );
@@ -122,9 +124,8 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     flexDirection: 'column',
-    borderColor: 'orange',
-    borderWidth: 3,
-    width: 400,
+    backgroundColor: '#4885ed',
+    width: 390,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
@@ -134,11 +135,9 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     flexDirection: 'column',
-    borderColor: 'orange',
-    width: 400,
+    width: 390,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
-    borderRadius: 20
   }
 });
