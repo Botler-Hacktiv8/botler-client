@@ -60,7 +60,11 @@ class AddTaskPage extends Component {
 
     // console.log(payload);
     this.props.postTaskAction(payload, this.state._UserToken);
-    // this.props.navigation.goBack();
+    if (this.props.successPost) {
+      this.props.navigation.goBack();
+    } else {
+      alert('Failed Post Task');
+    }
   }
 
   setStartTime = async() => {
@@ -195,6 +199,7 @@ class AddTaskPage extends Component {
 
 const mapStateToProps = (state) => ({
   taskData: state.taskState.taskData,
+  successPost: state.taskState.successPost
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
