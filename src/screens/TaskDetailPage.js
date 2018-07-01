@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import axios from 'axios';
-import { GOOGLE_MAPS_API } from '../../config'
+import { GOOGLE_MAPS_API } from '../../config';
 
 class TaskDetailPage extends Component {
   constructor() {
