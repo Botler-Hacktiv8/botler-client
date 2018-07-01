@@ -41,8 +41,8 @@ class Welcome extends Component {
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/login`, payload)
       .then(response => {
         this._storeToken(response.headers['x-auth']);
-        this.props.screenProps.login();
         ToastAndroid.show('Login Success', ToastAndroid.SHORT);
+        this.props.screenProps.login();
         // this.props.navigation.navigate('Home')
       }).catch(e => {
         console.log(`Failed login`, e);
