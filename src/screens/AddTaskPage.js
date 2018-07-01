@@ -5,14 +5,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   TimePickerAndroid,
-  DatePickerAndroid
+  DatePickerAndroid,
+  AsyncStorage
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
+
+// @ redux config
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
 
 class AddTaskPage extends Component {
   static navigationOptions = {
     drawerLabel: () => null
   }
+  
   constructor() {
     super()
     this.state = {
@@ -22,8 +29,38 @@ class AddTaskPage extends Component {
       startDate: '',
       startTime: '',
       finishDate: '',
-      finishTime: ''
+      finishTime: '',
+      _UserToken: '',
     }
+  }
+
+  componentWillMount() {
+    this._retrieveToken();
+  }
+
+  // @ retrive token from local storage
+  _retrieveToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('UserToken');
+      this.setState({ _UserToken: value });
+     } catch (e) {
+       console.log('Failed UserToken from storage', e);
+     }
+  }
+
+  //@ adding new task to db
+  addNewTask = () => {
+    const payload = {
+      text: this.state.description,
+      timeStart: new Date(`${this.state.startDate} ${this.state.startTime}`),
+      timeEnd: new Date(`${this.state.finishDate} ${this.state.finishTime}`),
+      locationName: this.state.location,
+      address: this.state.address,
+    }
+
+    // console.log(payload);
+    this.props.postTaskAction(payload, this.state._UserToken);
+    // this.props.navigation.goBack();
   }
 
   setStartTime = async() => {
@@ -93,12 +130,6 @@ class AddTaskPage extends Component {
     }
   }
 
-  //@ adding new task to db
-  addNewTask = () => {
-
-    this.props.navigation.goBack()
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -162,6 +193,19 @@ class AddTaskPage extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  taskData: state.taskState.taskData,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getAllTaskAction,
+  postTaskAction,
+  updateTaskAction,
+  deleteTaskAction
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddTaskPage);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -197,5 +241,3 @@ const styles = StyleSheet.create({
     marginTop: 20,
   }
 })
-
-export default AddTaskPage;

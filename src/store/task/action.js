@@ -1,5 +1,6 @@
 import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK } from './../action-type';
 import axios from 'axios';
+import { assignSchedule } from './../../lib/assign-schedule';
 
 // @ get all task
 export const getAllTaskAction = (token) => {
@@ -22,11 +23,17 @@ const getAllTask = (payload) => ({
 // @ post task
 export const postTaskAction = (payload, token) => {
   return (dispatch, getState) => {
-    // const postData = getState().taskState.taskData;
-    // const newPostData = [...postData];
+
+    // @ property for assign schedule
+    const address = getState().userState.userData.address;
+    const destination = payload.address;
+    const timeStart = payload.timeStart;
+
+    console.log(address, destination);
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, payload, { headers: { 'x-auth': token } })
       .then(response => {
-        // newPostData.push(response.data.task);
+        // @ assign
+        assignSchedule(address, destination, timeStart);
         dispatch(postTask(response.data.task));
       }).catch((e) => {
         console.log('Post task failed!', e)

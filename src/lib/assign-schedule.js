@@ -6,6 +6,7 @@ module.exports = {
   async assignSchedule(home, destination, timeStart, objUser = {}, objTask = {}) {
     // @ firedate
     let fireDate = await getFiredate(home, destination, new Date(timeStart));
+    console.log('fireDate', fireDate);
 
     PushNotification.configure({
       onNotification: function(notification) {
