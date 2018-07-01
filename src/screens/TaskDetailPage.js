@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
 
@@ -51,15 +52,45 @@ class TaskDetailPage extends Component {
     else {
       return (
         <View style={styles.container}>
-          <ScrollView>
-            <Text style={styles.titleStyle}>Dummy Data</Text>
-            <View style={styles.topStyle}>
-              <Text style={styles.topTextHead}>Time Needed:</Text>
-              <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
-              <Text style={styles.topTextHead}>Distance:</Text>
-              <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
+          <Text style={styles.titleStyle}>Nama Aktifitas</Text>
+          <View style={styles.topStyle}>
+            <Text style={styles.topTextHead}>Time Needed:</Text>
+            <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
+            <Text style={styles.topTextHead}>Distance:</Text>
+            <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
+          </View>
+          <FormLabel>Activity:</FormLabel>
+          <Text>Nama aktifitas</Text>
+          <FormLabel>Lokasi:</FormLabel>
+          <Text>Lokasi aktifitas</Text>
+          <FormLabel>Alamat:</FormLabel>
+          <Text>Alamat aktifitas</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={ styles.timeStyle }>
+              <FormLabel>Time Start:</FormLabel>
+              <Text>Waktu mulai</Text>
             </View>
-          </ScrollView>
+            <View style={ styles.timeStyle }>
+              <FormLabel>Time End:</FormLabel>
+              <Text>Waktu selesai</Text>
+            </View>
+          </View>
+          <TouchableOpacity>
+            <View style={styles.buttonMap}>
+              <Icon
+                name="map"
+                type="font-awesome"
+                size={20}
+                color='white'
+              />
+              <Text style={{fontWeight: 'bold', fontSize: 20, color: 'white'}}> Show on Map</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <View style={styles.buttonBack}>
+              <Text style={{fontWeight: 'bold', fontSize: 16, color: 'red'}}>GO BACK</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -76,10 +107,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
     flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   titleStyle: {
     fontWeight: 'bold',
@@ -95,6 +126,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginBottom: 10
+  },
+  timeStyle: {
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  buttonMap: {
+    flexDirection: 'row',
+    backgroundColor: '#4885ed',
+    width: 390,
+    height: 50,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    marginTop: 40,
+    marginLeft: 10
+  },
+  buttonBack: {
+    flexDirection: 'row',
+    width: 400,
+    height: 50,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    marginTop: 20,
+    marginLeft: 10
   }
 })
 

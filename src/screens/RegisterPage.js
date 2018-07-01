@@ -45,6 +45,7 @@ class RegisterPage extends Component {
 
   render() {
     return (
+      <View style={{ backgroundColor: 'white', flex: 1, alignItems: 'center' }}>
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.registerTitle}>REGISTER</Text>
@@ -97,8 +98,9 @@ class RegisterPage extends Component {
               <Icon
                 name='check'
                 type='font-awesome'
+                color='white'
               />
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}> SUBMIT</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
@@ -106,13 +108,15 @@ class RegisterPage extends Component {
               <Icon
                 name='times'
                 type='font-awesome'
-                color='white'
+                color='red'
+                size={18}
               />
-              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>CANCEL</Text>
+              <Text style={{color: 'red', fontSize: 18, fontWeight: 'bold'}}> CANCEL</Text>
             </View>
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </View>
     );
   }
 }
@@ -129,11 +133,13 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: 'center',
     paddingBottom: 10,
+    paddingTop: 20,
+    fontWeight: 'bold'
   },
   buttonCancel: {
     flexDirection: 'row',
-    backgroundColor: 'red',
-    width: 400,
+    // backgroundColor: 'red',
+    width: 390,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
@@ -141,16 +147,15 @@ const styles = StyleSheet.create({
   },
   buttonSubmit: {
     flexDirection: 'row',
-    width: 400,
+    backgroundColor: '#4885ed',
+    width: 390,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: '#21ff46',
-    marginBottom: 3,
+    borderRadius: 20,
+    marginBottom: 10,
     marginTop: 30,
-    borderRadius: 20
-  }
+  },
 })
 
 export default RegisterPage;

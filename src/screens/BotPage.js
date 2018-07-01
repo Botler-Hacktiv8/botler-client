@@ -162,12 +162,6 @@ class BotPage extends Component {
       });
   }
 
-  // @ testing show task list
-  clickTaskHandle = () => {
-    // console.log('clickTaskHandle', this.state._UserToken);
-    this.props.getAllTaskAction(this.state._UserToken);
-  }
-
   render() {
     // console.log(this.state)
     return (
@@ -204,8 +198,8 @@ class BotPage extends Component {
         <View style={styles.chatRoom}>
         { this.state.showChat.map((chatData, i) => (
           <View style={styles.styleChat} key={'chat' + i}>
-            <Text style={{fontWeight: 'bold'}}>{ chatData.speaker }</Text>
-            <Text>{ chatData.chat }</Text>
+            <Text style={{ fontWeight: 'bold' }}>{ chatData.speaker }</Text>
+            <Text style={{ marginLeft: 10}}>{ chatData.chat }</Text>
           </View>
         ))
         }
@@ -229,7 +223,6 @@ class BotPage extends Component {
             onPress={this.onSpeak}
           />
         </View>
-        <Button onPress={ this.clickTaskHandle } title="Task Testing" />
       </View>
     );
   }
@@ -252,7 +245,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
   avatarPlacement: {
     justifyContent: 'center',
@@ -267,10 +260,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 20
   },
   chatRoom: {
     flex: 1,
     padding: 3,
-    height: '100%'
+    height: '100%',
+    alignItems: 'center',
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5
   }
 })
