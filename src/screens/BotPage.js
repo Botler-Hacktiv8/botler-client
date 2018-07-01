@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Button,
+  StyleSheet,
+  Text,
+  ScrollView,
+  AsyncStorage,
+  TouchableOpacity,
+  Image
+} from 'react-native'
 import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
@@ -187,7 +196,10 @@ class BotPage extends Component {
           }
         />
         <View style={styles.avatarPlacement}>
-          <Text>BOT AVATAR</Text>
+          <Image source={require('../assets/myAvatar.png')} style={{width: 200, height: 200}}/>
+          <View style={styles.nameTag}>
+            <Text style={{ fontWeight: 'bold', fontSize: 18, textAlign: 'center'}}>Ms. BOTLER</Text>
+          </View>
         </View>
         <ScrollView 
           ref={ref => this.scrollView = ref}
@@ -251,15 +263,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderRadius: 3,
     margin: 5
   },
   styleChat: {
     borderRadius: 10,
     width: '100%',
     padding: 10,
+    margin: 10,
     backgroundColor: 'white',
     borderRadius: 20
   },
@@ -271,5 +281,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 5,
     marginRight: 5
+  },
+  nameTag: {
+    borderColor: 'grey',
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: 'white',
+    padding: 5,
+    width: 200
   }
 })
