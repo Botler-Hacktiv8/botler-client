@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage, TouchableOpacity } from 'react-native'
+import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage, TouchableOpacity, Linking } from 'react-native'
 import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
@@ -37,6 +37,8 @@ class BotPage extends Component {
     Tts.getInitStatus().then(() => {
       Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
     });
+
+    Linking.openURL('https://www.google.co.id/maps/dir/-6.2913296,106.7998045/Hacktiv8+Indonesia,+Jalan+Sultan+Iskandar+Muda+No.7,+RT.5%2FRW.9,+Kebayoran+Lama+Selatan,+Kebayoran+Lama,+RT.5%2FRW.9,+Kby.+Lama+Sel.,+Kby.+Lama,+Kota+Jakarta+Selatan,+Daerah+Khusus+Ibukota+Jakarta+12240/@-6.2748159,106.7723144,14z/data=!3m1!4b1!4m16!1m6!3m5!1s0x2e69f1a8713ce207:0x2c3ea1f4a28bfac5!2sHacktiv8+Indonesia!8m2!3d-6.2607187!4d106.7816162!4m8!1m1!4e1!1m5!1m1!1s0x2e69f1a8713ce207:0x2c3ea1f4a28bfac5!2m2!1d106.7816162!2d-6.2607187')
   }
   
   // @ retrive token from local storage
@@ -124,7 +126,7 @@ class BotPage extends Component {
     try {
       const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.INDONESIAN);
       console.log('spokenText: ',spokenText)
-      if (spokenText == 'lihat aktifitas') {
+      if (spokenText == 'lihat aktivitas') {
         this.props.navigation.navigate('ListTask')
       } else if (spokenText == 'keluar') {
         this.logout()
