@@ -1,16 +1,27 @@
-import React, { Component } from 'react';
-import { View, Button, StyleSheet, Text, ScrollView, AsyncStorage, TouchableOpacity, Linking } from 'react-native'
+import React, { Component } from 'react'
+import {
+  View,
+  Button,
+  StyleSheet,
+  Text,
+  ScrollView,
+  AsyncStorage,
+  TouchableOpacity,
+  Image,
+  ToastAndroid
+} from 'react-native'
 import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
 import PushNotification from 'react-native-push-notification';
-import Permissions from 'react-native-permissions'
+import Permissions from 'react-native-permissions';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
+import { getProfileAction } from './../store/user/action';
 
 import { ACCESS_TOKEN } from '../../config';
 
@@ -36,16 +47,17 @@ class BotPage extends Component {
     this.setState({showChat: arrayChat})
     Tts.getInitStatus().then(() => {
       Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
-    });
-
-    Linking.openURL('https://www.google.co.id/maps/dir/-6.2913296,106.7998045/Hacktiv8+Indonesia,+Jalan+Sultan+Iskandar+Muda+No.7,+RT.5%2FRW.9,+Kebayoran+Lama+Selatan,+Kebayoran+Lama,+RT.5%2FRW.9,+Kby.+Lama+Sel.,+Kby.+Lama,+Kota+Jakarta+Selatan,+Daerah+Khusus+Ibukota+Jakarta+12240/@-6.2748159,106.7723144,14z/data=!3m1!4b1!4m16!1m6!3m5!1s0x2e69f1a8713ce207:0x2c3ea1f4a28bfac5!2sHacktiv8+Indonesia!8m2!3d-6.2607187!4d106.7816162!4m8!1m1!4e1!1m5!1m1!1s0x2e69f1a8713ce207:0x2c3ea1f4a28bfac5!2m2!1d106.7816162!2d-6.2607187')
+    });    
   }
   
   // @ retrive token from local storage
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
-      this.setState({ _UserToken: value });
+      console.log('_retrieveToken', value);
+      this.setState({ _UserToken: value }, () => {
+        this.props.getProfileAction(this.state._UserToken);
+      });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
      }
@@ -164,12 +176,6 @@ class BotPage extends Component {
       });
   }
 
-  // @ testing show task list
-  clickTaskHandle = () => {
-    // console.log('clickTaskHandle', this.state._UserToken);
-    this.props.getAllTaskAction(this.state._UserToken);
-  }
-
   render() {
     // console.log(this.state)
     return (
@@ -195,7 +201,10 @@ class BotPage extends Component {
           }
         />
         <View style={styles.avatarPlacement}>
-          <Text>BOT AVATAR</Text>
+          <Image source={require('../assets/myAvatar.png')} style={{width: 200, height: 200}}/>
+          <View style={styles.nameTag}>
+            <Text style={{ fontWeight: 'bold', fontSize: 18, textAlign: 'center'}}>Ms. BOTLER</Text>
+          </View>
         </View>
         <ScrollView 
           ref={ref => this.scrollView = ref}
@@ -206,8 +215,8 @@ class BotPage extends Component {
         <View style={styles.chatRoom}>
         { this.state.showChat.map((chatData, i) => (
           <View style={styles.styleChat} key={'chat' + i}>
-            <Text style={{fontWeight: 'bold'}}>{ chatData.speaker }</Text>
-            <Text>{ chatData.chat }</Text>
+            <Text style={{ fontWeight: 'bold' }}>{ chatData.speaker }</Text>
+            <Text style={{ marginLeft: 10}}>{ chatData.chat }</Text>
           </View>
         ))
         }
@@ -231,7 +240,6 @@ class BotPage extends Component {
             onPress={this.onSpeak}
           />
         </View>
-        <Button onPress={ this.clickTaskHandle } title="Task Testing" />
       </View>
     );
   }
@@ -245,7 +253,8 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   getAllTaskAction,
   postTaskAction,
   updateTaskAction,
-  deleteTaskAction
+  deleteTaskAction,
+  getProfileAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BotPage);
@@ -254,25 +263,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
   avatarPlacement: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderRadius: 3,
     margin: 5
   },
   styleChat: {
     borderRadius: 10,
     width: '100%',
     padding: 10,
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 20
   },
   chatRoom: {
     flex: 1,
     padding: 3,
-    height: '100%'
+    height: '100%',
+    alignItems: 'center',
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  nameTag: {
+    borderColor: 'grey',
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: 'white',
+    padding: 5,
+    width: 200
   }
 })

@@ -5,14 +5,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   TimePickerAndroid,
-  DatePickerAndroid
+  DatePickerAndroid,
+  AsyncStorage
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
+
+// @ redux config
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
 
 class AddTaskPage extends Component {
   static navigationOptions = {
     drawerLabel: () => null
   }
+  
   constructor() {
     super()
     this.state = {
@@ -22,7 +29,41 @@ class AddTaskPage extends Component {
       startDate: '',
       startTime: '',
       finishDate: '',
-      finishTime: ''
+      finishTime: '',
+      _UserToken: '',
+    }
+  }
+
+  componentWillMount() {
+    this._retrieveToken();
+  }
+
+  // @ retrive token from local storage
+  _retrieveToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('UserToken');
+      this.setState({ _UserToken: value });
+     } catch (e) {
+       console.log('Failed UserToken from storage', e);
+     }
+  }
+
+  //@ adding new task to db
+  addNewTask = () => {
+    const payload = {
+      text: this.state.description,
+      timeStart: new Date(`${this.state.startDate} ${this.state.startTime}`),
+      timeEnd: new Date(`${this.state.finishDate} ${this.state.finishTime}`),
+      locationName: this.state.location,
+      address: this.state.address,
+    }
+
+    // console.log(payload);
+    this.props.postTaskAction(payload, this.state._UserToken);
+    if (this.props.successPost) {
+      this.props.navigation.goBack();
+    } else {
+      alert('Failed Post Task');
     }
   }
 
@@ -93,16 +134,10 @@ class AddTaskPage extends Component {
     }
   }
 
-  //@ adding new task to db
-  addNewTask = () => {
-
-    this.props.navigation.goBack()
-  }
-
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10}}>Add New Task</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10, paddingTop: 20}}>ADD NEW TASK</Text>
         <View>
           <FormLabel>Name Of Activity:</FormLabel>
           <FormInput
@@ -119,31 +154,43 @@ class AddTaskPage extends Component {
             onChangeText={(address) => this.setState({address})}
             value={this.state.address}
           />
-          <FormLabel>Start:</FormLabel>
+          <FormLabel>Start</FormLabel>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <TouchableOpacity onPress={ this.setStartDate }>
-              <View style={styles.button}>
-                <Text style={styles.butonText}>Set Date</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={ this.setStartTime }>
-              <View style={styles.button}>
-                <Text style={styles.butonText}>Set Time</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.styleDateTimeButtonArea}>
+              <Text style={styles.timeDateText}>Date: <Text style={styles.styleTimeDateData}>{this.state.startDate}</Text></Text>
+              <TouchableOpacity onPress={ this.setStartDate }>
+                <View style={styles.button}>
+                  <Text style={styles.butonText}>Set Date</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.styleDateTimeButtonArea}>
+            <Text style={styles.timeDateText}>Time: <Text style={styles.styleTimeDateData}>{this.state.startTime}</Text></Text>
+              <TouchableOpacity onPress={ this.setStartTime }>
+                <View style={styles.button}>
+                  <Text style={styles.butonText}>Set Time</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-          <FormLabel>Finish:</FormLabel>
+          <FormLabel>Finish</FormLabel>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={styles.styleDateTimeButtonArea}>
+            <Text style={styles.timeDateText}>Date: <Text style={styles.styleTimeDateData}>{this.state.finishDate}</Text></Text>
           <TouchableOpacity onPress={ this.setFinishDate }>
             <View style={styles.button}>
               <Text style={styles.butonText}>Set Date</Text>
             </View>
           </TouchableOpacity>
+          </View>
+          <View style={styles.styleDateTimeButtonArea}>
+            <Text style={styles.timeDateText}>Time: <Text style={styles.styleTimeDateData}>{this.state.finishTime}</Text></Text>
           <TouchableOpacity onPress={ this.setFinishTime }>
             <View style={styles.button}>
               <Text style={styles.butonText}>Set Time</Text>
             </View>
           </TouchableOpacity>
+          </View>
           </View>
         </View>
         <TouchableOpacity onPress={ this.addNewTask }>
@@ -152,15 +199,29 @@ class AddTaskPage extends Component {
               name='check'
               type='font-awesome'
               size={20}
-              color='orange'
+              color='white'
             />
-            <Text style={{ color: 'orange', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
+            <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
           </View>
         </TouchableOpacity>
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  taskData: state.taskState.taskData,
+  successPost: state.taskState.successPost
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getAllTaskAction,
+  postTaskAction,
+  updateTaskAction,
+  deleteTaskAction
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddTaskPage);
 
 const styles = StyleSheet.create({
   container: {
@@ -170,32 +231,39 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   button: {
-    flexDirection: 'row',
-    width: '80%',
+    width: 150,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
     backgroundColor: '#37c660',
-    marginBottom: 3,
-    marginTop: 30,
-    borderRadius: 10
+    margin: 10,
+    borderRadius: 10,
   },
   butonText: {
     fontSize: 14,
-    color: 'white'
+    color: 'white',
+    fontWeight: 'bold'
   },
   submitButton: {
     flexDirection: 'row',
-    borderColor: 'orange',
-    borderWidth: 3,
-    width: 400,
+    backgroundColor: '#4885ed',
+    width: 390,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
     borderRadius: 20,
     marginBottom: 3,
     marginTop: 20,
+  },
+  timeDateText: {
+    marginLeft: 10
+  },
+  styleTimeDateData: {
+    fontWeight: 'bold',
+    paddingLeft: 10,
+  },
+  styleDateTimeButtonArea: {
+    flexDirection: 'column',
+    paddingTop: 3
   }
 })
-
-export default AddTaskPage;

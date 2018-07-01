@@ -1,7 +1,7 @@
 import { GET_PROFILE } from './../action-type';
 
 const initialState = {
-  userData: []
+  userData: [],
 }
 
 const reducer = (state = {...initialState}, action) => {
