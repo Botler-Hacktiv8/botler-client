@@ -6,46 +6,46 @@ class ConfirmPage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Please Confirm!</Text>
-        <View>
-          <FormLabel>Activity:</FormLabel>
-          <Text>Nama aktifitas</Text>
-          <FormLabel>Lokasi:</FormLabel>
-          <Text>Lokasi aktifitas</Text>
-          <FormLabel>Alamat:</FormLabel>
-          <Text>Alamat aktifitas</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'column' }}>
-              <FormLabel>Time Start:</FormLabel>
-              <Text>Waktu mulai</Text>
-            </View>
-            <View style={{ flexDirection: 'column' }}>
-              <FormLabel>Time End:</FormLabel>
-              <Text>Waktu selesai</Text>
-            </View>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 20}}>CONFIRM!</Text>
+        <FormLabel>Activity:</FormLabel>
+        <Text>Nama aktifitas</Text>
+        <FormLabel>Lokasi:</FormLabel>
+        <Text>Lokasi aktifitas</Text>
+        <FormLabel>Alamat:</FormLabel>
+        <Text>Alamat aktifitas</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={ styles.timeStyle }>
+            <FormLabel>Time Start:</FormLabel>
+            <Text>Waktu mulai</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity>
-              <View style={ styles.buttonNo }>
-                <Icon
-                  name="times"
-                  type="font-awesome"
-                  size={20}
-                />
-                <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>No</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={ styles.buttonYes }>
-                <Icon
-                  name="check"
-                  type="font-awesome"
-                  size={20}
-                />
-                <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>Yes</Text>
-              </View>
-            </TouchableOpacity>
+          <View style={ styles.timeStyle }>
+            <FormLabel>Time End:</FormLabel>
+            <Text>Waktu selesai</Text>
           </View>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity>
+            <View style={ styles.buttonNo }>
+              <Icon
+                name="times"
+                type="font-awesome"
+                size={20}
+                color='white'
+              />
+              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>No</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={ styles.buttonYes }>
+              <Icon
+                name="check"
+                type="font-awesome"
+                size={20}
+                color='white'
+              />
+              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>Yes</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -57,25 +57,34 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   buttonNo: {
     flexDirection: 'row',
     backgroundColor: 'red',
-    width: 400,
+    width: 180,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
-    borderRadius: 20
+    borderRadius: 20,
+    marginTop: 40,
+    marginRight: 10
   },
   buttonYes: {
     flexDirection: 'row',
     backgroundColor: '#37c660',
-    width: 400,
+    width: 180,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
-    borderRadius: 20
+    borderRadius: 20,
+    marginTop: 40,
+    marginLeft: 10
+  },
+  timeStyle: {
+    flexDirection: 'column',
+    alignItems: 'center'
   }
 })
 

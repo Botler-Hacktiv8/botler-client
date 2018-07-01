@@ -10,7 +10,7 @@ import ListTaskPage from './src/screens/ListTaskPage';
 import TaskDetailPage from './src/screens/TaskDetailPage';
 import AddTaskPage from './src/screens/AddTaskPage';
 import UpdateTaskPage from './src/screens/UpdateTaskPage';
-import ConfirmPage from './src/screens/UpdateTaskPage'
+import ConfirmPage from './src/screens/ConfirmPage'
 import Welcome from './src/screens/Welcome';
 
 // @ redux setup
@@ -34,9 +34,9 @@ const RootDrawerNav = createDrawerNavigator({
   Home: BotPage,
   ListTask: ListTaskPage,
   Detail: TaskDetailPage,
+  Confirm: ConfirmPage,
   AddTask: AddTaskPage,
   UpdateTask: UpdateTaskPage,
-  Confirm: ConfirmPage
 }, {
   initialRouteName: 'Home'
 })
