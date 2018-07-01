@@ -38,7 +38,7 @@ class ConfirmPage extends Component {
                 size={20}
                 color='white'
               />
-              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>No</Text>
+              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}> No</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.addTask}>
@@ -49,7 +49,7 @@ class ConfirmPage extends Component {
                 size={20}
                 color='white'
               />
-              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>Yes</Text>
+              <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}> Yes</Text>
             </View>
           </TouchableOpacity>
         </View>
