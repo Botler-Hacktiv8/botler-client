@@ -5,7 +5,7 @@ import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
 import PushNotification from 'react-native-push-notification';
-import Permissions from 'react-native-permissions'
+import Permissions from 'react-native-permissions';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
