@@ -31,11 +31,13 @@ class BotPage extends Component {
   componentWillMount () {
     // retrieve token
     this._retrieveToken();
-    let greetChat = { speaker: 'Botler', chat: 'Greetings, how may I be of assistance today?' }
+    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Ada apa yang saya bisa bantu?' }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
-    Tts.speak('Greetings, how may I be of assistance today?')
+    Tts.getInitStatus().then(() => {
+      Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
+    });
   }
   
   // @ retrive token from local storage
