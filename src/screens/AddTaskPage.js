@@ -102,7 +102,7 @@ class AddTaskPage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10}}>Add New Task</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10, paddingTop: 20}}>ADD NEW TASK</Text>
         <View>
           <FormLabel>Name Of Activity:</FormLabel>
           <FormInput
@@ -119,31 +119,43 @@ class AddTaskPage extends Component {
             onChangeText={(address) => this.setState({address})}
             value={this.state.address}
           />
-          <FormLabel>Start:</FormLabel>
+          <FormLabel>Start</FormLabel>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <TouchableOpacity onPress={ this.setStartDate }>
-              <View style={styles.button}>
-                <Text style={styles.butonText}>Set Date</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={ this.setStartTime }>
-              <View style={styles.button}>
-                <Text style={styles.butonText}>Set Time</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.styleDateTimeButtonArea}>
+              <Text style={styles.timeDateText}>Date: <Text style={styles.styleTimeDateData}>{this.state.startDate}</Text></Text>
+              <TouchableOpacity onPress={ this.setStartDate }>
+                <View style={styles.button}>
+                  <Text style={styles.butonText}>Set Date</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.styleDateTimeButtonArea}>
+            <Text style={styles.timeDateText}>Time: <Text style={styles.styleTimeDateData}>{this.state.startTime}</Text></Text>
+              <TouchableOpacity onPress={ this.setStartTime }>
+                <View style={styles.button}>
+                  <Text style={styles.butonText}>Set Time</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-          <FormLabel>Finish:</FormLabel>
+          <FormLabel>Finish</FormLabel>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={styles.styleDateTimeButtonArea}>
+            <Text style={styles.timeDateText}>Date: <Text style={styles.styleTimeDateData}>{this.state.finishDate}</Text></Text>
           <TouchableOpacity onPress={ this.setFinishDate }>
             <View style={styles.button}>
               <Text style={styles.butonText}>Set Date</Text>
             </View>
           </TouchableOpacity>
+          </View>
+          <View style={styles.styleDateTimeButtonArea}>
+            <Text style={styles.timeDateText}>Time: <Text style={styles.styleTimeDateData}>{this.state.finishTime}</Text></Text>
           <TouchableOpacity onPress={ this.setFinishTime }>
             <View style={styles.button}>
               <Text style={styles.butonText}>Set Time</Text>
             </View>
           </TouchableOpacity>
+          </View>
           </View>
         </View>
         <TouchableOpacity onPress={ this.addNewTask }>
@@ -152,9 +164,9 @@ class AddTaskPage extends Component {
               name='check'
               type='font-awesome'
               size={20}
-              color='orange'
+              color='white'
             />
-            <Text style={{ color: 'orange', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
+            <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -170,31 +182,40 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   button: {
-    flexDirection: 'row',
-    width: '80%',
+    width: 150,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
     backgroundColor: '#37c660',
-    marginBottom: 3,
-    marginTop: 30,
-    borderRadius: 10
+    margin: 10,
+    borderRadius: 10,
   },
   butonText: {
     fontSize: 14,
-    color: 'white'
+    color: 'white',
+    fontWeight: 'bold'
   },
   submitButton: {
     flexDirection: 'row',
-    borderColor: 'orange',
-    borderWidth: 3,
-    width: 400,
+    backgroundColor: '#4885ed',
+    width: 390,
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
     borderRadius: 20,
     marginBottom: 3,
     marginTop: 20,
+  },
+  timeDateText: {
+    marginLeft: 10
+  },
+  styleTimeDateData: {
+    fontWeight: 'bold',
+    paddingLeft: 10,
+  },
+  styleDateTimeButtonArea: {
+    flexDirection: 'column',
+    paddingTop: 3
   }
 })
 
