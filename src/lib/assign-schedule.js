@@ -14,7 +14,7 @@ module.exports = {
 
     PushNotification.configure({
       onNotification: function(notification) {
-        console.log('onNotification', notification);
+        // console.log('onNotification', notification);
         Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
       }
     })
