@@ -47,7 +47,7 @@ class Welcome extends Component {
         // this.props.navigation.navigate('Home')
       }).catch(() => {
         this.setState({
-          errorMessage: 'email or password not math'
+          errorMessage: 'email or password not match'
         })
       })
   }
