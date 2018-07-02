@@ -63,8 +63,8 @@ class UpdateTaskPage extends Component {
 
   setStartTime = async() => {
     try {
-      let minutes = new Date().getMinutes()
-      let hours = new Date().getHours()
+      let minutes = this.state.startTime.substring(0,2)
+      let hours = this.state.startTime.substring(3,5)
       const {action, hour, minute} = await TimePickerAndroid.open({
         hour: hours,
         minute: minutes,
@@ -81,9 +81,10 @@ class UpdateTaskPage extends Component {
 
   setStartDate = async() => {
     try {
+      let startDate = new Date(this.state.startDate)
       const {action, year, month, day} = await DatePickerAndroid.open({
         // Use `new Date()` for current date.
-        date: new Date()
+        date: startDate
       });
       if (action !== DatePickerAndroid.dismissedAction) {
         // Selected year, month (0-11), day
@@ -95,8 +96,8 @@ class UpdateTaskPage extends Component {
   }
 
   setFinishTime = async() => {
-    let minutes = new Date().getMinutes()
-    let hours = new Date().getHours()
+    let minutes = this.state.finishTime.substring(0,2)
+    let hours = this.state.finishTime.substring(3,5)
     try {
       const {action, hour, minute} = await TimePickerAndroid.open({
         hour: hours,
@@ -114,10 +115,11 @@ class UpdateTaskPage extends Component {
 
   setFinishDate = async() => {
     try {
+      let finishDate = new Date(this.state.finishDate)
       const {action, year, month, day} = await DatePickerAndroid.open({
         // Use `new Date()` for current date.
         // May 25 2020. Month 0 is January.
-        date: new Date()
+        date: finishDate
       });
       if (action !== DatePickerAndroid.dismissedAction) {
         // Selected year, month (0-11), day
@@ -130,7 +132,13 @@ class UpdateTaskPage extends Component {
 
   //@ adding new task to db
   updateTask = () => {
-
+    const payload = {
+      text: this.state.description,
+      timeStart: new Date(`${this.state.startDate} ${this.state.startTime}`),
+      timeEnd: new Date(`${this.state.finishDate} ${this.state.finishTime}`),
+      locationName: this.state.location,
+      address: this.state.address,
+    }
     this.props.navigation.goBack()
   }
 
