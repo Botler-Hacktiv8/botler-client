@@ -7,7 +7,6 @@ module.exports = {
   async assignSchedule(home, destination, timeStart, objUser, objTask) {
     // @ firedate
     let fireDate = await getFiredate(home, destination, new Date(timeStart));
-    console.log('fireDate', fireDate);
 
     let activityDateObj = new Date(objTask.timeStart)
     let timeBeginActivity = `${activityDateObj.getHours()}:${activityDateObj.getMinutes()}`
