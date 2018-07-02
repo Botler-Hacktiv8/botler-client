@@ -3,7 +3,10 @@ import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStora
 import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
+// @ redux
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { deleteTaskAction } from './../store/task/action';
 
 class TaskDetailPage extends Component {
   static navigationOptions = {
@@ -79,8 +82,9 @@ class TaskDetailPage extends Component {
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'OK', onPress: () => {
-          //kirim data ke store buat di apus datanya
-          //redirect balik ke bot page
+          const taskId = this.props.navigation.getParam('id');
+          this.props.deleteTaskAction(taskId, this.state._UserToken);
+          this.props.navigation.navigate('Home');
         }},
       ],
       { cancelable: false }
@@ -179,6 +183,16 @@ class TaskDetailPage extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  userData: state.userState.userData,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  deleteTaskAction,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskDetailPage);
+
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
@@ -240,9 +254,3 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
 })
-
-const mapStateToProps = (state) => ({
-  userData: state.userState.userData,
-});
-
-export default connect(mapStateToProps, null)(TaskDetailPage);
