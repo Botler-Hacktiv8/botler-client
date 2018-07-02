@@ -78,7 +78,7 @@ const updateTask = (payload) => ({
 });
 
 // @ delete task
-export const deleteTaskAction = (taskId, payload, token) => {
+export const deleteTaskAction = (taskId, token) => {
   return (dispatch) => {
     axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, { headers: { 'x-auth': token } })
       .then(response => {

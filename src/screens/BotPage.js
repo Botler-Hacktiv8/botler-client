@@ -41,7 +41,7 @@ class BotPage extends Component {
   componentWillMount () {
     // retrieve token
     this._retrieveToken();
-    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Ada apa yang saya bisa bantu?' }
+    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Apa yang saya bisa bantu?' }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
