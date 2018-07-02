@@ -41,7 +41,6 @@ class Welcome extends Component {
         this._storeToken(response.headers['x-auth']);
         ToastAndroid.show('Login Success', ToastAndroid.SHORT);
         this.props.screenProps.login();
-        // this.props.navigation.navigate('Home')
       }).catch(() => {
         this.setState({
           errorMessage: 'email or password not match'
