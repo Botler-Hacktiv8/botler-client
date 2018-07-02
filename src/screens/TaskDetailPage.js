@@ -94,7 +94,7 @@ class TaskDetailPage extends Component {
   //@ update task
   updateTask = () => {
     this.props.navigation.navigate('UpdateTask', {
-      id: this.props.navigation.getParam('id')
+      task: this.state.taskDetail
     })
   }
 

@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
   },
   buttonCancel: {
     flexDirection: 'row',
-    // backgroundColor: 'red',
     width: 390,
     height: 50,
     alignItems:'center',
