@@ -48,7 +48,6 @@ class BotPage extends Component {
     Tts.getInitStatus().then(() => {
       Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
     });
-    
   }
   
   // @ retrive token from local storage
@@ -58,6 +57,7 @@ class BotPage extends Component {
       console.log('_retrieveToken', value);
       this.setState({ _UserToken: value }, () => {
         this.props.getProfileAction(this.state._UserToken);
+        this.props.getAllTaskAction(this.state._UserToken)
       });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
