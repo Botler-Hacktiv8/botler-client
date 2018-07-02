@@ -58,8 +58,9 @@ const failedPostAction = () => ({
 })
 
 // @ update task
-export const updateTaskAction = (taskId, payload, token) => {
-  return (dispatch) => {
+export const updateTaskAction = (taskId, payload) => {
+  return (dispatch, getState) => {
+    const token = getState().userState.userData.token;
     axios.patch(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, payload, { headers: { 'x-auth': token } })
       .then(response => {
         dispatch(updateTask(response.data.task));
