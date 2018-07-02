@@ -1,11 +1,11 @@
 import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK, SUCCESS_POST, FAILED_POST } from './../action-type';
-import axios from 'axios';
 import { assignSchedule } from './../../lib/assign-schedule';
+// @ lib
+import axios from 'axios';
 
 // @ get all task
 export const getAllTaskAction = (token) => {
   return (dispatch) => {
-    console.log('getAllTaskAction', token);
     axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, { headers: { 'x-auth': token } })
       .then(response => {
         dispatch(getAllTask(response.data.tasks));
@@ -21,31 +21,25 @@ const getAllTask = (payload) => ({
 });
 
 // @ post task
-export const postTaskAction = (payload, token) => {
+export const postTaskAction = (payload) => {
   return (dispatch, getState) => {
     // @ set default to false
     dispatch(failedPostAction());
-    console.log('ini successPost seharusnya FAILED === ',getState().taskState.successPost)
-
     // @ property for assign schedule
     const address = getState().userState.userData.address;
+    const token = getState().userState.userData.token;
     const destination = payload.address;
     const timeStart = payload.timeStart;
 
-
-    console.log(address, destination);
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, payload, { headers: { 'x-auth': token } })
       .then(response => {
         // @ success post
         dispatch(successPostAction());
-        console.log('ini successPost seharusnya SUCCESS === ',getState().taskState.successPost)
-
-        // @ assign
+        // @ assign schedule
         assignSchedule(address, destination, timeStart, getState().userState.userData, response.data.task);
         dispatch(postTask(response.data.task));
-        
       }).catch((e) => {
-        console.log('Post task failed!', e)
+        console.log('Post task failed!', e);
       })
   }
 }
