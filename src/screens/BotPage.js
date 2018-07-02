@@ -39,12 +39,12 @@ class BotPage extends Component {
   componentWillMount () {
     // retrieve token
     this._retrieveToken();
-    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Ada apa yang saya bisa bantu?' }
+    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?' }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
     Tts.getInitStatus().then(() => {
-      Tts.speak('Halo, nama saya Botler. Apa yang saya bisa bantu?');
+      Tts.speak('Halo, nama saya Botler. Apa yang bisa saya bantu?');
     });    
   }
   
@@ -92,19 +92,8 @@ class BotPage extends Component {
       text
     }
 
-    this.props.postTaskAction(payload, this.state._UserToken)
-    console.log('ini payload dan token', payload, this.state._UserToken);
-    console.log('ini dia state succesPost =====', this.props.successPost)
-
-    setTimeout(() =>{
-      if (this.props.successPost) {
-        ToastAndroid.show('Success Post Task', ToastAndroid.SHORT);
-      } else {
-        ToastAndroid.show('Failed Post Task', ToastAndroid.SHORT);
-      }
-  
-    }, 500)   
-    
+    // navigate to confirm page
+    this.props.navigation.navigate('Confirm', { payload })
   }
 
   getDialogFlow = async(msg) => { 
