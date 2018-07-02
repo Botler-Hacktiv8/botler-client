@@ -14,8 +14,6 @@ import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
-import PushNotification from 'react-native-push-notification';
-import Permissions from 'react-native-permissions';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
@@ -76,6 +74,37 @@ class BotPage extends Component {
   // @ get response data from dialog-flow
   addData = (responseData) => {
     console.log('Fix data:', responseData);
+    let {
+      address,
+      dateEnd,
+      timeEnd,
+      timeStart,
+      dateStart,
+      locationName,
+      text
+    } = responseData
+
+    let payload = {
+      address,
+      timeStart: new Date(`${dateStart} ${timeStart}`),
+      timeEnd: new Date(`${dateEnd} ${timeEnd}`),
+      locationName,
+      text
+    }
+
+    this.props.postTaskAction(payload, this.state._UserToken)
+    console.log('ini payload dan token', payload, this.state._UserToken);
+    console.log('ini dia state succesPost =====', this.props.successPost)
+
+    setTimeout(() =>{
+      if (this.props.successPost) {
+        ToastAndroid.show('Success Post Task', ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show('Failed Post Task', ToastAndroid.SHORT);
+      }
+  
+    }, 500)   
+    
   }
 
   getDialogFlow = async(msg) => { 
@@ -248,6 +277,8 @@ class BotPage extends Component {
 
 const mapStateToProps = (state) => ({
   taskData: state.taskState.taskData,
+  successPost: state.taskState.successPost,
+  successPost: state.taskState.successPost
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

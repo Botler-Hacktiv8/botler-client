@@ -23,22 +23,27 @@ const getAllTask = (payload) => ({
 // @ post task
 export const postTaskAction = (payload, token) => {
   return (dispatch, getState) => {
+    // @ set default to false
+    dispatch(failedPostAction());
+    console.log('ini successPost seharusnya FAILED === ',getState().taskState.successPost)
+
     // @ property for assign schedule
     const address = getState().userState.userData.address;
     const destination = payload.address;
     const timeStart = payload.timeStart;
-    // @ set default to false
-    dispatch(failedPostAction());
+
 
     console.log(address, destination);
     axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, payload, { headers: { 'x-auth': token } })
       .then(response => {
-        // @ assign
-        assignSchedule(address, destination, timeStart);
-        dispatch(postTask(response.data.task));
-
         // @ success post
         dispatch(successPostAction());
+        console.log('ini successPost seharusnya SUCCESS === ',getState().taskState.successPost)
+
+        // @ assign
+        assignSchedule(address, destination, timeStart, getState().userState.userData, response.data.task);
+        dispatch(postTask(response.data.task));
+        
       }).catch((e) => {
         console.log('Post task failed!', e)
       })

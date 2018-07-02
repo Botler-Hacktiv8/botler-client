@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TimePickerAndroid,
   DatePickerAndroid,
-  AsyncStorage
+  AsyncStorage,
+  ToastAndroid
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
 
@@ -42,6 +43,7 @@ class AddTaskPage extends Component {
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
+      console.log('Hasil get Token from storage', value);
       this.setState({ _UserToken: value });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
@@ -61,9 +63,10 @@ class AddTaskPage extends Component {
     // console.log(payload);
     this.props.postTaskAction(payload, this.state._UserToken);
     if (this.props.successPost) {
+      ToastAndroid.show('Success Post Task', ToastAndroid.SHORT);
       this.props.navigation.goBack();
     } else {
-      alert('Failed Post Task');
+      ToastAndroid.show('Failed Post Task', ToastAndroid.SHORT);
     }
   }
 
