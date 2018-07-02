@@ -1,29 +1,59 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
 import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
+import { connect } from 'react-redux';
 
 class TaskDetailPage extends Component {
+  static navigationOptions = {
+    drawerLabel: () => null
+  }
+
   constructor() {
     super()
     this.state = {
-      initialAddress: 'Jalan Sultan Iskandar Muda No.7, RT.5/RW.9, Kebayoran Lama Selatan, Kebayoran Lama, RT.5/RW.9, Kby. Lama Sel., Kby. Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12240',
-      destinationAddress: 'Jl. Metro Pondok Indah, Pd. Pinang, Kby. Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12310',
       distance: '',
       time: '',
-      loading: true
+      loading: true,
+      _UserToken: '',
+      taskDetail: {}
     }
   }
 
   componentDidMount() {
-    this.getDistance()
+    this._retrieveToken()
   }
   
+  // @ retrive token from local storage
+  _retrieveToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('UserToken');
+      console.log('_retrieveToken', value);
+      this.setState({ _UserToken: value }, () => {
+        this.getTaskData(this.props.navigation.getParam('id') ,this.state._UserToken)
+      })
+     } catch (e) {
+       console.log('Failed UserToken from storage', e);
+     }
+  }
+
+  getTaskData = (id, userToken) => {
+    let self = this
+    axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${id}`, {headers: {'x-auth': self.state._UserToken}})
+    .then(function(response) {
+      self.setState({taskDetail: response.data.task})
+      self.getDistance()
+    })
+    .catch(function(err) {
+      console.log(err)
+    })
+  }
+
   getDistance = () => {
     this.setState({loading: true})
     let self = this
-    axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${this.state.initialAddress}&destinations=${this.state.destinationAddress}&key=${GOOGLE_MAPS_API}`)
+    axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${this.props.userData.address}&destinations=${this.state.taskDetail.address}&key=${GOOGLE_MAPS_API}`)
     .then(function(response) {
       console.log(response)
       let distanceInMiles = response.data.rows[0].elements[0].distance.text
@@ -52,27 +82,34 @@ class TaskDetailPage extends Component {
     else {
       return (
         <View style={styles.container}>
-          <Text style={styles.titleStyle}>Nama Aktifitas</Text>
+          <Text style={styles.titleStyle}>{this.state.taskDetail.text}</Text>
           <View style={styles.topStyle}>
             <Text style={styles.topTextHead}>Time Needed:</Text>
             <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
             <Text style={styles.topTextHead}>Distance:</Text>
             <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
           </View>
-          <FormLabel>Activity:</FormLabel>
-          <Text>Nama aktifitas</Text>
-          <FormLabel>Lokasi:</FormLabel>
-          <Text>Lokasi aktifitas</Text>
-          <FormLabel>Alamat:</FormLabel>
-          <Text>Alamat aktifitas</Text>
+          <FormLabel>Location:</FormLabel>
+          <Text style={{ margin: 10 }}>{this.state.taskDetail.locationName}</Text>
+          <FormLabel>Address:</FormLabel>
+          <View style={{ margin: 10 }}>
+            <Text>{this.state.taskDetail.address}</Text>
+          </View>
           <View style={{ flexDirection: 'row' }}>
             <View style={ styles.timeStyle }>
               <FormLabel>Time Start:</FormLabel>
-              <Text>Waktu mulai</Text>
+              <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeStart).toGMTString().substring(0, 25)}</Text>
+            </View>
+            <View style={ styles.timeStyle }>
+              <Icon
+                name="clock-o"
+                type="font-awesome"
+                size={30}
+              />
             </View>
             <View style={ styles.timeStyle }>
               <FormLabel>Time End:</FormLabel>
-              <Text>Waktu selesai</Text>
+              <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).toGMTString().substring(0, 25)}</Text>
             </View>
           </View>
           <TouchableOpacity>
@@ -129,7 +166,8 @@ const styles = StyleSheet.create({
   },
   timeStyle: {
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   buttonMap: {
     flexDirection: 'row',
@@ -151,7 +189,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 20,
     marginLeft: 10
-  }
+  },
 })
 
-export default TaskDetailPage;
+const mapStateToProps = (state) => ({
+  userData: state.userState.userData,
+});
+
+export default connect(mapStateToProps, null)(TaskDetailPage);

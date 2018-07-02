@@ -46,7 +46,7 @@ class BotPage extends Component {
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
     Tts.getInitStatus().then(() => {
-      Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
+      Tts.speak('Halo, nama saya Botler. Apa yang saya bisa bantu?');
     });    
   }
   
@@ -57,6 +57,7 @@ class BotPage extends Component {
       console.log('_retrieveToken', value);
       this.setState({ _UserToken: value }, () => {
         this.props.getProfileAction(this.state._UserToken);
+        this.props.getAllTaskAction(this.state._UserToken)
       });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
