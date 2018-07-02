@@ -12,7 +12,7 @@ import {
 import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
-import axios from 'axios'
+import axios from 'axios';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
