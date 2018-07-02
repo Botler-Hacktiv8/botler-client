@@ -41,7 +41,8 @@ class RegisterPage extends Component {
         }).catch(e => {
           console.log(`Register failed`, e);
           this.setState({
-            errorMessage: e.response.data.message
+            // errorMessage: e.response.data.message
+            errorMessage: 'register failed, please input data correctly!',
           })
         })
     }
