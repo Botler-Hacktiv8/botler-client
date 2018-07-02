@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
 import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
@@ -71,6 +71,29 @@ class TaskDetailPage extends Component {
     })
   }
 
+  //@ delete task method. Sending data to store after confirmation
+  deleteTask = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to delete this task?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          //kirim data ke store buat di apus datanya
+          //redirect balik ke bot page
+        }},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  //@ update task
+  updateTask = () => {
+    this.props.navigation.navigate('UpdateTask', {
+      id: this.props.navigation.getParam('id')
+    })
+  }
+
   render() {
     if(this.state.loading === true) {
       return (
@@ -82,18 +105,40 @@ class TaskDetailPage extends Component {
     else {
       return (
         <View style={styles.container}>
-          <Text style={styles.titleStyle}>{this.state.taskDetail.text}</Text>
+          <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'space-around', width: '100%' }}>
+            <TouchableOpacity onPress={this.deleteTask}>
+              <Icon
+                name="trash"
+                type="font-awesome"
+                size={20}
+                color='lightgrey'
+              />
+            </TouchableOpacity>
+            <Text style={styles.titleStyle}>{this.state.taskDetail.text}</Text>
+            <TouchableOpacity onPress={ this.updateTask }>
+              <Icon
+                name="pencil"
+                type="font-awesome"
+                size={20}
+                color='lightgrey'
+              />
+            </TouchableOpacity>
+          </View>
           <View style={styles.topStyle}>
-            <Text style={styles.topTextHead}>Time Needed:</Text>
-            <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
-            <Text style={styles.topTextHead}>Distance:</Text>
-            <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
+            <View style={styles.distanceAndTimeStyle}>
+              <Text style={styles.topTextHead}>Time Needed:</Text>
+              <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
+            </View>
+            <View style={styles.distanceAndTimeStyle}>
+              <Text style={styles.topTextHead}>Distance:</Text>
+              <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
+            </View>
           </View>
           <FormLabel>Location:</FormLabel>
-          <Text style={{ margin: 10 }}>{this.state.taskDetail.locationName}</Text>
+          <Text style={{ margin: 5 }}>{this.state.taskDetail.locationName}</Text>
           <FormLabel>Address:</FormLabel>
-          <View style={{ margin: 10 }}>
-            <Text>{this.state.taskDetail.address}</Text>
+          <View style={{ margin: 5, width: '80%' }}>
+            <Text style={{ textAlign: 'center' }}>{this.state.taskDetail.address}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <View style={ styles.timeStyle }>
@@ -152,12 +197,16 @@ const styles = StyleSheet.create({
   titleStyle: {
     fontWeight: 'bold',
     fontSize: 24,
-    marginBottom: 10
   },
   topStyle: {
+    flexDirection: 'row',
+    padding: 10
+  },
+  distanceAndTimeStyle: {
+    width: '50%',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10
   },
   topTextHead: {
     fontWeight: 'bold',
