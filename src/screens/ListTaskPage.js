@@ -18,9 +18,8 @@ class ListTaskPage extends Component {
   }
 
   compileData = () => {
-    let rawData = this.props.taskData
-    rawData.sort(function(a, b) {return a.timeStart - b.timeStart})
-    console.log(rawData)
+    let rawData = this.props.taskData;
+    rawData.sort(function(a, b) {return a.timeStart - b.timeStart});
     let finalData = [];
     let finishDate = [];
     for (let i = 0; i < rawData.length; i++) {
