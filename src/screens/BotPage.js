@@ -46,7 +46,7 @@ class BotPage extends Component {
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
     Tts.getInitStatus().then(() => {
-      Tts.speak('Halo, nama saya Botler. Ada apa yang saya bisa bantu?');
+      Tts.speak('alo, nama saya Botler. Apa yang saya bisa bantu?');
     });
   }
   
