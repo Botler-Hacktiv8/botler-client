@@ -34,7 +34,6 @@ module.exports = {
 
 /*
 const { getFiredate } = require('./get-firedate');
-
 const home = 'Bogor, Kp. Parung Jambu, Bogor City, West Java';
 const dest = 'Jalan Sultan Iskandar Muda No.7, RT.5/RW.9, Kebayoran Lama Selatan, Kebayoran Lama, RT.5/RW.9, Kby. Lama Sel., Kby. Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12240';
 (async () => {
