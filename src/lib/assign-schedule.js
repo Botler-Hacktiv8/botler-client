@@ -11,6 +11,7 @@ module.exports = {
 
     let activityDateObj = new Date(objTask.timeStart)
     let timeBeginActivity = `${activityDateObj.getHours()}:${activityDateObj.getMinutes()}`
+    let notificationId = `${activityDateObj.getDate()}${activityDateObj.getHours()}${activityDateObj.getMinutes()}`
 
     PushNotification.configure({
       onNotification: function(notification) {
@@ -20,14 +21,13 @@ module.exports = {
     })
 
     PushNotification.localNotificationSchedule({
+      id: notificationId,
       title: `Lakukan persiapan untuk aktivitas`,
       message: `Aktivitas pada ${timeBeginActivity} memiliki waktu tempuh ${fireDate[1]}`,
       date: fireDate[0], // new Date(Date.now() + (3 * 1000))
       bigText: `Aktivitas anda "${objTask.text}" akan dimulai pada ${timeBeginActivity}. Perkiraan waktu tempuh adalah ${fireDate[1]}`,
       vibrate: true,
-      vibration: 300,
-      tag: `${objTask._id}`
-      /* iOS and Android properties */
+      vibration: 300
     })
   }
 }

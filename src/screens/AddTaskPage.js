@@ -62,8 +62,20 @@ class AddTaskPage extends Component {
     }
 
     console.log('ini time start dan end', payload.timeStart, payload.timeEnd)
-    // navigate to confirm page
-    this.props.navigation.navigate('Confirm', { payload }) 
+    
+    this.props.postTaskAction(payload, this.state._UserToken)
+    console.log('ini payload dan token', payload, this.state._UserToken);
+    console.log('ini dia state succesPost =====', this.props.successPost)
+
+    setTimeout(() =>{
+      if (this.props.successPost) {
+        ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+        this.props.navigation.navigate('Home')
+      } else {
+        ToastAndroid.show('Failed Post Task', ToastAndroid.LONG);
+      }
+  
+    }, 500) 
   }
 
   setStartTime = async() => {
