@@ -7,7 +7,8 @@ import {
   TimePickerAndroid,
   DatePickerAndroid,
   AsyncStorage,
-  ToastAndroid
+  ToastAndroid,
+  ScrollView
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
 

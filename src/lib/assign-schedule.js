@@ -26,7 +26,7 @@ module.exports = {
       bigText: `Aktivitas anda "${objTask.text}" akan dimulai pada ${timeBeginActivity}. Perkiraan waktu tempuh adalah ${fireDate[1]}`,
       vibrate: true,
       vibration: 300,
-      tag: `${objTask._id}`,
+      tag: `${objTask._id}`
       /* iOS and Android properties */
     })
   }
