@@ -63,8 +63,6 @@ const failedPostAction = () => ({
   type: FAILED_POST
 })
 
-
-
 // @ update task
 export const updateTaskAction = (taskId, payload, token) => {
   return (dispatch) => {

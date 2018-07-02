@@ -6,17 +6,26 @@ import {
   StyleSheet,
   TimePickerAndroid,
   DatePickerAndroid,
-  ScrollView
+  ScrollView,
+  AsyncStorage,
+  ToastAndroid
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
 
+// @ redux config
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { updateTaskAction } from './../store/task/action';
+
 class UpdateTaskPage extends Component {
-  // static navigationOptions = {
-  //   drawerLabel: () => null
-  // }
+  static navigationOptions = {
+    drawerLabel: () => null
+  }
+
   constructor() {
     super()
     this.state = {
+      _id: '',
       description: '',
       address: '',
       location: '',
@@ -27,30 +36,32 @@ class UpdateTaskPage extends Component {
     }
   }
 
+  componentDidMount() {
+    this._retrieveToken();
+  }
+
   // @ retrive token from local storage
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
       console.log('_retrieveToken', value);
       this.setState({ _UserToken: value }, () => {
-        this.getTaskData(this.props.navigation.getParam('id') ,this.state._UserToken)
-      })
+        this.prepareState();
+      });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
      }
   }
 
-  componentDidMount() {
-    this.prepareState()
-  }
-
   prepareState = () => {
     let task = this.props.navigation.getParam('task')
+    let _id = task._id;
     let startTime = task.timeStart.substring(11, 19)
     let startDate = task.timeStart.split('T')[0]
     let finishTime = task.timeEnd.substring(11, 19)
     let finishDate = task.timeEnd.split('T')[0]
     this.setState({
+      _id: _id,
       description: task.text,
       address: task.address,
       location: task.locationName,
@@ -63,8 +74,8 @@ class UpdateTaskPage extends Component {
 
   setStartTime = async() => {
     try {
-      let minutes = new Date().getMinutes()
-      let hours = new Date().getHours()
+      let minutes = this.state.startTime.substring(0,2)
+      let hours = this.state.startTime.substring(3,5)
       const {action, hour, minute} = await TimePickerAndroid.open({
         hour: hours,
         minute: minutes,
@@ -81,9 +92,10 @@ class UpdateTaskPage extends Component {
 
   setStartDate = async() => {
     try {
+      let startDate = new Date(this.state.startDate)
       const {action, year, month, day} = await DatePickerAndroid.open({
         // Use `new Date()` for current date.
-        date: new Date()
+        date: startDate
       });
       if (action !== DatePickerAndroid.dismissedAction) {
         // Selected year, month (0-11), day
@@ -95,8 +107,8 @@ class UpdateTaskPage extends Component {
   }
 
   setFinishTime = async() => {
-    let minutes = new Date().getMinutes()
-    let hours = new Date().getHours()
+    let minutes = this.state.finishTime.substring(0,2)
+    let hours = this.state.finishTime.substring(3,5)
     try {
       const {action, hour, minute} = await TimePickerAndroid.open({
         hour: hours,
@@ -114,10 +126,11 @@ class UpdateTaskPage extends Component {
 
   setFinishDate = async() => {
     try {
+      let finishDate = new Date(this.state.finishDate)
       const {action, year, month, day} = await DatePickerAndroid.open({
         // Use `new Date()` for current date.
         // May 25 2020. Month 0 is January.
-        date: new Date()
+        date: finishDate
       });
       if (action !== DatePickerAndroid.dismissedAction) {
         // Selected year, month (0-11), day
@@ -130,8 +143,18 @@ class UpdateTaskPage extends Component {
 
   //@ adding new task to db
   updateTask = () => {
+    const taskId = this.state._id;
+    const payload = {
+      text: this.state.description,
+      timeStart: new Date(`${this.state.startDate} ${this.state.startTime}`),
+      timeEnd: new Date(`${this.state.finishDate} ${this.state.finishTime}`),
+      locationName: this.state.location,
+      address: this.state.address,
+    }
+    this.props.updateTaskAction(taskId, payload, this.state._UserToken);
+    this.props.navigation.goBack();
+    ToastAndroid.show('Success Update Task', ToastAndroid.SHORT);
 
-    this.props.navigation.goBack()
   }
 
   render() {
@@ -222,6 +245,12 @@ class UpdateTaskPage extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  updateTaskAction,
+}, dispatch);
+
+export default connect(null, mapDispatchToProps)(UpdateTaskPage);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -274,5 +303,3 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
 })
-
-export default UpdateTaskPage;
