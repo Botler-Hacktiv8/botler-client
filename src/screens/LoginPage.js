@@ -24,7 +24,8 @@ class Welcome extends Component {
     super()
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      errorMessage: '',
     }
   }
 
@@ -44,8 +45,10 @@ class Welcome extends Component {
         ToastAndroid.show('Login Success', ToastAndroid.SHORT);
         this.props.screenProps.login();
         // this.props.navigation.navigate('Home')
-      }).catch(e => {
-        console.log(`Failed login`, e);
+      }).catch(() => {
+        this.setState({
+          errorMessage: 'email or password not math'
+        })
       })
   }
 
@@ -79,6 +82,9 @@ class Welcome extends Component {
               autoCapitalize = 'none'
               secureTextEntry={true}
             />
+          </View>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text style={{color: 'red'}}>{this.state.errorMessage}</Text>
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center' }}>
             <TouchableOpacity onPress={this.loginUser}>
