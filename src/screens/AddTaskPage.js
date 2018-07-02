@@ -7,7 +7,7 @@ import {
   TimePickerAndroid,
   DatePickerAndroid,
   AsyncStorage,
-  ScrollView
+  ToastAndroid
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
 
@@ -43,6 +43,7 @@ class AddTaskPage extends Component {
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
+      console.log('Hasil get Token from storage', value);
       this.setState({ _UserToken: value });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
@@ -59,13 +60,9 @@ class AddTaskPage extends Component {
       address: this.state.address,
     }
 
-    // console.log(payload);
-    this.props.postTaskAction(payload, this.state._UserToken);
-    if (this.props.successPost) {
-      this.props.navigation.goBack();
-    } else {
-      alert('Failed Post Task');
-    }
+    console.log('ini time start dan end', payload.timeStart, payload.timeEnd)
+    // navigate to confirm page
+    this.props.navigation.navigate('Confirm', { payload }) 
   }
 
   setStartTime = async() => {

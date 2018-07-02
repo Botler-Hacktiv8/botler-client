@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   View,
   Button,
@@ -14,8 +14,6 @@ import { Icon, FormInput, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
-import PushNotification from 'react-native-push-notification';
-import Permissions from 'react-native-permissions';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
@@ -40,13 +38,13 @@ class BotPage extends Component {
 
   componentWillMount () {
     // retrieve token
-    this._retrieveToken();
-    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Apa yang saya bisa bantu?' }
+    this._retrieveToken()
+    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?' }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
     Tts.getInitStatus().then(() => {
-      Tts.speak('Halo, nama saya Botler. Apa yang saya bisa bantu?');
+      Tts.speak('Halo, nama saya Botler. Apa yang bisa saya bantu?');
     });
   }
   
@@ -76,6 +74,26 @@ class BotPage extends Component {
   // @ get response data from dialog-flow
   addData = (responseData) => {
     console.log('Fix data:', responseData);
+    let {
+      address,
+      dateEnd,
+      timeEnd,
+      timeStart,
+      dateStart,
+      locationName,
+      text
+    } = responseData
+
+    let payload = {
+      address,
+      timeStart: new Date(`${dateStart} ${timeStart}`),
+      timeEnd: new Date(`${dateEnd} ${timeEnd}`),
+      locationName,
+      text
+    }
+
+    // navigate to confirm page
+    this.props.navigation.navigate('Confirm', { payload })
   }
 
   getDialogFlow = async(msg) => { 
@@ -139,7 +157,7 @@ class BotPage extends Component {
     try {
       const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.INDONESIAN);
       console.log('spokenText: ',spokenText)
-      if (spokenText == 'lihat aktifitas') {
+      if (spokenText == 'lihat aktivitas') {
         this.props.navigation.navigate('ListTask')
       } else if (spokenText == 'keluar') {
         this.logout()
@@ -248,6 +266,8 @@ class BotPage extends Component {
 
 const mapStateToProps = (state) => ({
   taskData: state.taskState.taskData,
+  successPost: state.taskState.successPost,
+  successPost: state.taskState.successPost
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

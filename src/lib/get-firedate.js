@@ -6,7 +6,7 @@ function getTimestamp(date) {
 }
 
 function timeBackTo (timeStart, value) {
-  return new Date((getTimestamp(timeStart) - value) * 1000);
+  return new Date((getTimestamp(timeStart) - (value + 1200)) * 1000);
 }
 
 module.exports = {
@@ -20,7 +20,14 @@ module.exports = {
     try {
       const response = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${home}&destinations=${destination}&key=${GOOGLE_MAPS_API}`);
       const result = response.data.rows[0].elements[0].duration.value;
-      return timeBackTo(timeStart, result);
+      let resultInText = response.data.rows[0].elements[0].duration.text;
+
+      resultInText = resultInText.replace(/hours/i, 'jam')
+      resultInText = resultInText.replace(/hour/i, 'jam')
+      resultInText = resultInText.replace(/mins/i, 'menit')
+      resultInText = resultInText.replace(/min/i, 'menit')
+
+      return [timeBackTo(timeStart, result), resultInText];
     } catch(e) {
       console.log(e);
     }

@@ -1,29 +1,33 @@
 // @ import module here
 import { getFiredate } from './get-firedate';
 import PushNotification from 'react-native-push-notification';
+import { Linking } from 'react-native'
 
 module.exports = {
-  async assignSchedule(home, destination, timeStart, objUser = {}, objTask = {}) {
+  async assignSchedule(home, destination, timeStart, objUser, objTask) {
     // @ firedate
     let fireDate = await getFiredate(home, destination, new Date(timeStart));
     console.log('fireDate', fireDate);
 
+    let activityDateObj = new Date(objTask.timeStart)
+    let timeBeginActivity = `${activityDateObj.getHours()}:${activityDateObj.getMinutes()}`
+
     PushNotification.configure({
       onNotification: function(notification) {
         console.log('onNotification', notification);
+        Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
       }
     })
 
     PushNotification.localNotificationSchedule({
-      message: "My Notification Message",
-      date: fireDate, // new Date(Date.now() + (3 * 1000))
-      bigText: "My big text that will be shown when notification is expanded",
-      color: "red",
+      title: `Lakukan persiapan untuk aktivitas`,
+      message: `Aktivitas pada ${timeBeginActivity} memiliki waktu tempuh ${fireDate[1]}`,
+      date: fireDate[0], // new Date(Date.now() + (3 * 1000))
+      bigText: `Aktivitas anda "${objTask.text}" akan dimulai pada ${timeBeginActivity}. Perkiraan waktu tempuh adalah ${fireDate[1]}`,
       vibrate: true,
       vibration: 300,
-      tag: 'ini_id_198239shiusbf938qhasjhasfu',
+      tag: `${objTask._id}`,
       /* iOS and Android properties */
-      title: "My Notification Title",
     })
   }
 }

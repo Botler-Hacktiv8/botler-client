@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Alert, Linking } from 'react-native';
 import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
@@ -72,6 +72,13 @@ class TaskDetailPage extends Component {
       console.log(err)
       self.setState({loading: false})
     })
+  }
+
+  showDetailOnMap = () => {
+    let home = this.props.userData.address
+    let destination = this.state.taskDetail.address
+
+    Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
   }
 
   //@ delete task method. Sending data to store after confirmation
@@ -161,7 +168,7 @@ class TaskDetailPage extends Component {
               <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).toGMTString().substring(0, 25)}</Text>
             </View>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.showDetailOnMap()}>
             <View style={styles.buttonMap}>
               <Icon
                 name="map"
