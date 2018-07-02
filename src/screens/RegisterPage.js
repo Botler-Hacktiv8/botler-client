@@ -11,28 +11,40 @@ class RegisterPage extends Component {
     email: '',
     password: '',
     confirm: '',
-    address: ''
+    address: '',
+    errorMessage: ''
   }
 
   registerUser = async () => {
-    const { firstName, lastName, email, password } = this.state;
-    const payload = {
-      firstName,
-      lastName,
-      email,
-      password
-    }
+    const { firstName, lastName, email, address, password, confirm } = this.state;
 
-    // console.log('register user', payload);
-    axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/register`, payload)
-      .then(response => {
-        this._storeToken(response.headers['x-auth']);
-        ToastAndroid.show('Register Success', ToastAndroid.SHORT);
-        this.props.screenProps.login();
-        // this.props.navigation.navigate('Home')
-      }).catch(e => {
-        console.log(`Register failed`, e);
-      })
+    if (password !== confirm) {
+      this.setState({
+        errorMessage: 'confirm password don\'t match'
+      });
+    } else {
+      const payload = {
+        firstName,
+        lastName,
+        email,
+        password,
+        address
+      }
+  
+      // console.log('register user', payload);
+      axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/register`, payload)
+        .then(response => {
+          this._storeToken(response.headers['x-auth']);
+          ToastAndroid.show('Register Success', ToastAndroid.SHORT);
+          this.props.screenProps.login();
+          // this.props.navigation.navigate('Home')
+        }).catch(e => {
+          console.log(`Register failed`, e);
+          this.setState({
+            errorMessage: e.response.data.message
+          })
+        })
+    }
   }
 
   _storeToken = async (token) => {
@@ -92,6 +104,9 @@ class RegisterPage extends Component {
               value={this.state.confirm}
               secureTextEntry={true}
             />
+          </View>
+          <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+            <Text style={{color: 'red'}}>{this.state.errorMessage}</Text>
           </View>
           <TouchableOpacity onPress={this.registerUser}>
             <View style={styles.buttonSubmit}>
