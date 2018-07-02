@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getBotlerDataAction } from './../store/action';
+import { getBotlerDataAction } from './../store/botler/action';
 
 class Welcome extends Component {
 
@@ -28,6 +29,7 @@ class Welcome extends Component {
         <Text style={styles.instructions}>
           Redux work well, this is data from redux: {this.props.botlerData[0]}
         </Text>
+        <Button onPress={() => this.props.navigation.navigate('Bot')} title="Go To Bot!"/>
       </View>
     );
   }
