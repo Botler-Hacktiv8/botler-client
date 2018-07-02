@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { deleteTaskAction } from './../store/task/action';
 
 class TaskDetailPage extends Component {
+
   static navigationOptions = {
     drawerLabel: () => null
   }
@@ -19,8 +20,8 @@ class TaskDetailPage extends Component {
       distance: '',
       time: '',
       loading: true,
-      _UserToken: '',
-      taskDetail: {}
+      taskDetail: {},
+      userToken: '',
     }
   }
 
@@ -31,54 +32,51 @@ class TaskDetailPage extends Component {
   // @ retrive token from local storage
   _retrieveToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('UserToken');
-      console.log('_retrieveToken', value);
-      this.setState({ _UserToken: value }, () => {
-        this.getTaskData(this.props.navigation.getParam('id') ,this.state._UserToken)
-      })
+      const userToken = await AsyncStorage.getItem('UserToken');
+      this.setState({ userToken: userToken }, () => {
+        const taskId = this.props.navigation.getParam('id');
+        this.getTaskData(taskId);
+      });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
      }
   }
 
-  getTaskData = (id, userToken) => {
-    let self = this
-    axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${id}`, {headers: {'x-auth': self.state._UserToken}})
-    .then(function(response) {
-      self.setState({taskDetail: response.data.task})
-      self.getDistance()
-    })
-    .catch(function(err) {
-      console.log(err)
-    })
+  getTaskData = (taskId) => {
+    let self = this;
+    axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, { headers: {'x-auth': this.state.userToken } })
+      .then(function(response) {
+        self.setState({ taskDetail: response.data.task })
+        self.getDistance();
+      })
+      .catch(function(err) {
+        console.log(err)
+      });
   }
 
   getDistance = () => {
-    this.setState({loading: true})
-    let self = this
-    axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${this.props.userData.address}&destinations=${this.state.taskDetail.address}&key=${GOOGLE_MAPS_API}`)
-    .then(function(response) {
-      console.log(response)
-      let distanceInMiles = response.data.rows[0].elements[0].distance.text
-      let tempDistance = distanceInMiles.split(' ')[0]
-      let distanceInKm = Math.round(Number(tempDistance) * 1.60934).toString() + ' km'
-      self.setState({
-        distance: distanceInKm,
-        time: response.data.rows[0].elements[0].duration.text,
-        loading: false
+    this.setState({ loading: true });
+    let self = this;
+    axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${this.props.userData.address}&destinations=${this.state.taskDetail.address}&key=${GOOGLE_MAPS_API}`)
+      .then(function(response) {
+        let distanceInMiles = response.data.rows[0].elements[0].distance.text;
+        let tempDistance = distanceInMiles.split(' ')[0];
+        let distanceInKm = Math.round(Number(tempDistance) * 1.60934).toString() + ' km';
+        self.setState({
+          distance: distanceInKm,
+          time: response.data.rows[0].elements[0].duration.text,
+          loading: false
+        });
       })
-    })
-    .catch(function(err) {
-      console.log(err)
-      self.setState({loading: false})
-    })
+      .catch(function(err) {
+        self.setState({loading: false});
+      })
   }
 
   showDetailOnMap = () => {
-    let home = this.props.userData.address
-    let destination = this.state.taskDetail.address
-
-    Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
+    let home = this.props.userData.address;
+    let destination = this.state.taskDetail.address;
+    Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`);
   }
 
   //@ delete task method. Sending data to store after confirmation
@@ -87,12 +85,12 @@ class TaskDetailPage extends Component {
       'Warning',
       'Are you sure you want to delete this task?',
       [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'OK', onPress: () => {
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'OK', onPress: () => {
           const taskId = this.props.navigation.getParam('id');
-          this.props.deleteTaskAction(taskId, this.state._UserToken);
+          this.props.deleteTaskAction(taskId);
           this.props.navigation.navigate('Home');
-        }},
+        } },
       ],
       { cancelable: false }
     )

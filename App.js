@@ -10,8 +10,7 @@ import ListTaskPage from './src/screens/ListTaskPage';
 import TaskDetailPage from './src/screens/TaskDetailPage';
 import AddTaskPage from './src/screens/AddTaskPage';
 import UpdateTaskPage from './src/screens/UpdateTaskPage';
-import ConfirmPage from './src/screens/ConfirmPage'
-import Welcome from './src/screens/Welcome';
+import ConfirmPage from './src/screens/ConfirmPage';
 
 // @ redux setup
 import { Provider } from 'react-redux';
