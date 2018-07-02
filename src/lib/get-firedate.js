@@ -20,7 +20,6 @@ module.exports = {
       resultInText = resultInText.replace(/min/i, 'menit')
 
       const firedate = timeBackTo(timeStart, result);
-      console.log('get firedate', firedate);
       return [firedate, resultInText];
     } catch(e) {
       console.log(e);
