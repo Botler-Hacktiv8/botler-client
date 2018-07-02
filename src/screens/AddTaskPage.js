@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TimePickerAndroid,
   DatePickerAndroid,
-  AsyncStorage,
   ToastAndroid,
   ScrollView
 } from 'react-native'
@@ -18,6 +17,7 @@ import { connect } from 'react-redux';
 import { postTaskAction } from './../store/task/action';
 
 class AddTaskPage extends Component {
+
   static navigationOptions = {
     drawerLabel: () => null
   }
@@ -32,22 +32,7 @@ class AddTaskPage extends Component {
       startTime: 'No Time selected',
       finishDate: 'No Date selected',
       finishTime: 'No Time selected',
-      userToken: '',
     }
-  }
-
-  componentWillMount() {
-    this._retrieveToken();
-  }
-
-  // @ retrive token from local storage
-  _retrieveToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('UserToken');
-      this.setState({ userToken: value });
-     } catch (e) {
-       console.log('Failed UserToken from storage', e);
-     }
   }
 
   //@ adding new task to db
@@ -59,13 +44,8 @@ class AddTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-
-    console.log('ini time start dan end', payload.timeStart, payload.timeEnd)
-    
     this.props.postTaskAction(payload);
-    console.log('ini payload dan token', payload, this.state.userToken);
-    console.log('ini dia state succesPost =====', this.props.successPost)
-
+    // @ waiting change state
     setTimeout(() =>{
       if (this.props.successPost) {
         ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
