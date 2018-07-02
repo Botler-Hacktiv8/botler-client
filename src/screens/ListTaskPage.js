@@ -19,7 +19,8 @@ class ListTaskPage extends Component {
 
   compileData = () => {
     let rawData = this.props.taskData
-    rawData.sort( (a, b) => a.timeStart - b.timeStart)
+    rawData.sort(function(a, b) {return a.timeStart - b.timeStart})
+    console.log(rawData)
     let finalData = [];
     let finishDate = [];
     for (let i = 0; i < rawData.length; i++) {
@@ -53,7 +54,7 @@ class ListTaskPage extends Component {
     })
   }
 
-  test = (data) => {
+  viewDetail = (data) => {
     this.props.navigation.navigate('Detail', {
       id: data._id
     })
@@ -76,7 +77,7 @@ class ListTaskPage extends Component {
           options={{
             style:{paddingTop:5}
           }}
-          onEventPress={ (e) => this.test(e)}
+          onEventPress={ (e) => this.viewDetail(e)}
         />
         </View>
       ))

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Linking } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Alert, Linking } from 'react-native';
 import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
+// @ redux
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { deleteTaskAction } from './../store/task/action';
 
 class TaskDetailPage extends Component {
   static navigationOptions = {
@@ -78,6 +81,30 @@ class TaskDetailPage extends Component {
     Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
   }
 
+  //@ delete task method. Sending data to store after confirmation
+  deleteTask = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to delete this task?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          const taskId = this.props.navigation.getParam('id');
+          this.props.deleteTaskAction(taskId, this.state._UserToken);
+          this.props.navigation.navigate('Home');
+        }},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  //@ update task
+  updateTask = () => {
+    this.props.navigation.navigate('UpdateTask', {
+      task: this.state.taskDetail
+    })
+  }
+
   render() {
     if(this.state.loading === true) {
       return (
@@ -89,18 +116,40 @@ class TaskDetailPage extends Component {
     else {
       return (
         <View style={styles.container}>
-          <Text style={styles.titleStyle}>{this.state.taskDetail.text}</Text>
+          <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'space-around', width: '100%' }}>
+            <TouchableOpacity onPress={this.deleteTask}>
+              <Icon
+                name="trash"
+                type="font-awesome"
+                size={20}
+                color='lightgrey'
+              />
+            </TouchableOpacity>
+            <Text style={styles.titleStyle}>{this.state.taskDetail.text}</Text>
+            <TouchableOpacity onPress={ this.updateTask }>
+              <Icon
+                name="pencil"
+                type="font-awesome"
+                size={20}
+                color='lightgrey'
+              />
+            </TouchableOpacity>
+          </View>
           <View style={styles.topStyle}>
-            <Text style={styles.topTextHead}>Time Needed:</Text>
-            <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
-            <Text style={styles.topTextHead}>Distance:</Text>
-            <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
+            <View style={styles.distanceAndTimeStyle}>
+              <Text style={styles.topTextHead}>Time Needed:</Text>
+              <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.time}</Text>
+            </View>
+            <View style={styles.distanceAndTimeStyle}>
+              <Text style={styles.topTextHead}>Distance:</Text>
+              <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
+            </View>
           </View>
           <FormLabel>Location:</FormLabel>
-          <Text style={{ margin: 10 }}>{this.state.taskDetail.locationName}</Text>
+          <Text style={{ margin: 5 }}>{this.state.taskDetail.locationName}</Text>
           <FormLabel>Address:</FormLabel>
-          <View style={{ margin: 10 }}>
-            <Text>{this.state.taskDetail.address}</Text>
+          <View style={{ margin: 5, width: '80%' }}>
+            <Text style={{ textAlign: 'center' }}>{this.state.taskDetail.address}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <View style={ styles.timeStyle }>
@@ -141,6 +190,16 @@ class TaskDetailPage extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  userData: state.userState.userData,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  deleteTaskAction,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskDetailPage);
+
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
@@ -159,12 +218,16 @@ const styles = StyleSheet.create({
   titleStyle: {
     fontWeight: 'bold',
     fontSize: 24,
-    marginBottom: 10
   },
   topStyle: {
+    flexDirection: 'row',
+    padding: 10
+  },
+  distanceAndTimeStyle: {
+    width: '50%',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10
   },
   topTextHead: {
     fontWeight: 'bold',
@@ -198,9 +261,3 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
 })
-
-const mapStateToProps = (state) => ({
-  userData: state.userState.userData,
-});
-
-export default connect(mapStateToProps, null)(TaskDetailPage);

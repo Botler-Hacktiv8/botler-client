@@ -27,10 +27,10 @@ class AddTaskPage extends Component {
       description: '',
       address: '',
       location: '',
-      startDate: '',
-      startTime: '',
-      finishDate: '',
-      finishTime: '',
+      startDate: 'No Date selected',
+      startTime: 'No Time selected',
+      finishDate: 'No Date selected',
+      finishTime: 'No Time selected',
       _UserToken: '',
     }
   }
@@ -134,6 +134,7 @@ class AddTaskPage extends Component {
 
   render() {
     return (
+        <ScrollView>
       <View style={styles.container}>
         <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10, paddingTop: 20}}>ADD NEW TASK</Text>
         <View>
@@ -202,7 +203,19 @@ class AddTaskPage extends Component {
             <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <View style={styles.buttonCancel}>
+              <Icon
+                name='times'
+                type='font-awesome'
+                color='red'
+                size={18}
+              />
+              <Text style={{color: 'red', fontSize: 18, fontWeight: 'bold'}}> CANCEL</Text>
+            </View>
+          </TouchableOpacity>
       </View>
+      </ScrollView>
     );
   }
 }
@@ -263,5 +276,13 @@ const styles = StyleSheet.create({
   styleDateTimeButtonArea: {
     flexDirection: 'column',
     paddingTop: 3
-  }
+  },
+  buttonCancel: {
+    flexDirection: 'row',
+    width: 390,
+    height: 50,
+    alignItems:'center',
+    justifyContent: 'center',
+    borderRadius: 20
+  },
 })
