@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Linking } from 'react-native';
 import { FormLabel, Icon } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
@@ -71,6 +71,13 @@ class TaskDetailPage extends Component {
     })
   }
 
+  showDetailOnMap = () => {
+    let home = this.props.userData.address
+    let destination = this.state.taskDetail.address
+
+    Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
+  }
+
   render() {
     if(this.state.loading === true) {
       return (
@@ -112,7 +119,7 @@ class TaskDetailPage extends Component {
               <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).toGMTString().substring(0, 25)}</Text>
             </View>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.showDetailOnMap()}>
             <View style={styles.buttonMap}>
               <Icon
                 name="map"
