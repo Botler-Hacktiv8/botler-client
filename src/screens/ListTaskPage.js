@@ -128,18 +128,28 @@ class ListTaskPage extends Component {
       return (
         <View style={styles.container}>
           <Header 
-            centerComponent={
-            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>TASK LIST</Text>
+          rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+            <Icon
+              name='plus'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>MY SCHEDULE</Text>
             }
-            leftComponent={
-              <Icon
-                name='chevron-left'
-                type='font-awesome'
-                color='white'
-                onPress={() => this.props.navigation.goBack()}
-              />
-            }
-          />
+          leftComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+        />
           {this.renderPicker()}
           <ScrollView>
             {this.renderTaskList()}

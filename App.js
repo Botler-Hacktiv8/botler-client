@@ -33,7 +33,7 @@ const RootStackNav = createStackNavigator({
 // @ drawer navigation
 const RootDrawerNav = createDrawerNavigator({
   Home: BotPage,
-  ListTask: ListTaskPage,
+  'My Schedule': ListTaskPage,
   Detail: TaskDetailPage,
   Confirm: ConfirmPage,
   AddTask: AddTaskPage,

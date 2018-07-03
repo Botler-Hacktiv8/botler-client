@@ -347,7 +347,6 @@ const styles = StyleSheet.create({
   chatBox: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 5,
     backgroundColor: 'white',
     borderRadius: 10
   }
