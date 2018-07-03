@@ -127,17 +127,27 @@ class AddTaskPage extends Component {
     return (
         <ScrollView>
       <View style={styles.container}>
-        <Header 
-          centerComponent={
-            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>ADD NEW TASK</Text>
-          }
-          leftComponent={
+      <Header
+          rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
             <Icon
-              name='chevron-left'
+              name='plus'
               type='font-awesome'
               color='white'
-              onPress={() => this.props.navigation.goBack()}
             />
+          </TouchableOpacity>
+          }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>ADD NEW TASK</Text>
+            }
+          leftComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
           }
         />
         <View>
