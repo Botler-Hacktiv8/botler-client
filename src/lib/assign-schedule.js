@@ -1,21 +1,25 @@
 // @ import module here
 import { getFiredate } from './get-firedate';
 import PushNotification from 'react-native-push-notification';
-import { Linking } from 'react-native'
+import { Linking } from 'react-native';
 
 module.exports = {
   async assignSchedule(home, destination, timeStart, objUser, objTask) {
     // @ firedate
     let fireDate = await getFiredate(home, destination, new Date(timeStart));
+    console.log('firedate ->', fireDate[0]);
 
-    let activityDateObj = new Date(objTask.timeStart)
-    let timeBeginActivity = `${activityDateObj.getHours()}:${activityDateObj.getMinutes()}`
-    let notificationId = `${activityDateObj.getDate()}${activityDateObj.getHours()}${activityDateObj.getMinutes()}`
+    let activityDateObj = new Date(objTask.timeStart);
+    let timeBeginActivity = `${activityDateObj.getHours()}:${activityDateObj.getMinutes()}`;
+
+    // @ obj for id
+    let newObjActivity = new Date(objTask.createdAt);
+    let notificationId = `${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}`;
 
     PushNotification.configure({
       onNotification: function(notification) {
         // console.log('onNotification', notification);
-        Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`)
+        Linking.openURL(`https://www.google.co.id/maps/dir/${home}/${destination}`);
       }
     })
 
@@ -28,6 +32,14 @@ module.exports = {
       vibrate: true,
       vibration: 300
     })
+  },
+  cancelSchedule(objTask) {
+    // @ obj for id
+    let newObjActivity = new Date(objTask.createdAt);
+    let notificationId = `${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}`;
+    console.log('deleted task', notificationId);
+
+    PushNotification.cancelLocalNotifications({ id: notificationId });
   }
 }
 
