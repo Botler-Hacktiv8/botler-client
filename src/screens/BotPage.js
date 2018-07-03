@@ -37,8 +37,13 @@ class BotPage extends Component {
         alignSelf: 'flex-end',
         padding: 10,
         margin: 10,
-        backgroundColor: '#97befc',
+        backgroundColor: '#4885ed',
         borderRadius: 20
+      },
+      chatFontStyle: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'white'
       },
       botlerChatStyle: {
         alignSelf: 'flex-start',
@@ -46,6 +51,10 @@ class BotPage extends Component {
         margin: 10,
         backgroundColor: 'white',
         borderRadius: 20
+      },
+      botlerChatFontStyle: {
+        fontSize: 14,
+        fontWeight: 'bold',
       }
     };
   }
@@ -54,7 +63,13 @@ class BotPage extends Component {
     // @ retrieve token
     this._retrieveToken()
 
-    let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?', style: this.state.botlerChatStyle }
+    let greetChat =
+    {
+      speaker: 'Botler',
+      chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?',
+      style: this.state.botlerChatStyle,
+      fontStyle: this.state.botlerChatFontStyle
+    }
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
@@ -129,7 +144,13 @@ class BotPage extends Component {
         },
       })
       let speech = response.data.result.fulfillment.speech
-      let botReply = { speaker: 'Botler', chat: speech,  style: this.state.botlerChatStyle }
+      let botReply =
+      {
+        speaker: 'Botler',
+        chat: speech,
+        style: this.state.botlerChatStyle,
+        fontStyle: this.state.botlerChatFontStyle
+      }
       Tts.speak(speech);
       if (speech.includes('sedang saya proses')) {
         let dataParameter;
@@ -156,7 +177,13 @@ class BotPage extends Component {
   //@ text chat input
   chatToBot = async() => {
     try {
-      let userChat = { speaker: 'me', chat: this.state.chatText, style: this.state.userChatStyle }
+      let userChat =
+      {
+        speaker: 'me',
+        chat: this.state.chatText,
+        style: this.state.userChatStyle,
+        fontStyle: this.state.chatFontStyle
+      }
       let arrayChat = this.state.showChat
       arrayChat.push(userChat)
       this.setState({ showChat: arrayChat })
@@ -177,7 +204,13 @@ class BotPage extends Component {
       } else if (spokenText == 'keluar') {
         this.logout()
       } else {
-        let userChat = { speaker: 'me', chat: spokenText, style: this.state.userChatStyle }
+        let userChat =
+        {
+          speaker: 'me',
+          chat: spokenText,
+          style: this.state.userChatStyle,
+          fontStyle: this.state.chatFontStyle
+        }
         let arrayChat = this.state.showChat
         arrayChat.push(userChat)
         this.setState({showChat: arrayChat})
@@ -249,8 +282,8 @@ class BotPage extends Component {
         >
         <View style={styles.chatRoom}>
         { this.state.showChat.map((chatData, i) => (
-          <View style={chatData.style} key={'chat' + i}>
-            <Text style={{fontSize: 14, fontWeight: 'bold'}}>{ chatData.chat }</Text>
+          <View style={ chatData.style } key={'chat' + i}>
+            <Text style={ chatData.fontStyle }>{ chatData.chat }</Text>
           </View>
         ))
         }
