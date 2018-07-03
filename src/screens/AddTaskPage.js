@@ -46,6 +46,9 @@ class AddTaskPage extends Component {
     }
     this.props.postTaskAction(payload);
     // @ waiting change state
+    ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+    this.props.navigation.navigate('Home')
+    /*
     setTimeout(() =>{
       if (this.props.successPost) {
         ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
@@ -53,7 +56,8 @@ class AddTaskPage extends Component {
       } else {
         ToastAndroid.show('Failed Post Task', ToastAndroid.LONG);
       }
-    }, 1000) 
+    }, 1000)
+    */ 
   }
 
   setStartTime = async() => {
