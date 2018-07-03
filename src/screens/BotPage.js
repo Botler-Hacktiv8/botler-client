@@ -8,9 +8,10 @@ import {
   AsyncStorage,
   TouchableOpacity,
   Image,
-  ToastAndroid
+  ToastAndroid,
+  TextInput
 } from 'react-native'
-import { Icon, FormInput, Header } from 'react-native-elements';
+import { Icon, Header } from 'react-native-elements';
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
 import axios from 'axios'
@@ -18,6 +19,7 @@ import axios from 'axios'
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
 import { getProfileAction } from './../store/user/action';
 
@@ -43,6 +45,8 @@ class BotPage extends Component {
     let arrayChat = []
     arrayChat.push(greetChat)
     this.setState({showChat: arrayChat})
+    Tts.setDefaultLanguage('id-ID');
+    Tts.setDefaultVoice('id-id-x-dfz#male_2-local')
     Tts.getInitStatus().then(() => {
       Tts.speak('Halo, nama saya Botler. Apa yang bisa saya bantu?');
     });
@@ -196,7 +200,6 @@ class BotPage extends Component {
   }
 
   render() {
-    // console.log(this.state)
     return (
       <View style={styles.container}>
         <Header 
@@ -209,10 +212,13 @@ class BotPage extends Component {
             />
           </TouchableOpacity>
           }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>BOTLER</Text>
+            }
           leftComponent={
-          <TouchableOpacity onPress={this.logout}>
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
             <Icon
-              name='sign-out'
+              name='bars'
               type='font-awesome'
               color='white'
             />
@@ -220,10 +226,9 @@ class BotPage extends Component {
           }
         />
         <View style={styles.avatarPlacement}>
-          <Image source={require('../assets/myAvatar.png')} style={{width: 200, height: 200}}/>
-          <View style={styles.nameTag}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18, textAlign: 'center'}}>Ms. BOTLER</Text>
-          </View>
+          <TouchableOpacity onPress={this.onSpeak}>
+              <Image source={require('../assets/botler-icon.png')} style={{ width: 100, height: 100 }}/>
+          </TouchableOpacity>
         </View>
         <ScrollView 
           ref={ref => this.scrollView = ref}
@@ -241,22 +246,19 @@ class BotPage extends Component {
         }
         </View>
         </ScrollView>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingBottom: 10 }}>
+        <View style={ styles.chatBox }>
+          <View style={{width: '75%', paddingBottom: 10}}>
+            <TextInput
+              onChangeText={(chatText) => this.setState({chatText})}
+              value={this.state.chatText}
+            />
+          </View>
           <Icon
             name='arrow-circle-right'
             type='font-awesome'
             color='#00a9ff'
             size={35}
             onPress={this.chatToBot}
-          />
-          <View style={{width: '75%', marginBottom: 10}}>
-            <FormInput onChangeText={(chatText) => this.setState({chatText})} value={this.state.chatText} />
-          </View>
-          <Icon
-            name='microphone'
-            type='font-awesome'
-            color='red'
-            onPress={this.onSpeak}
           />
         </View>
       </View>
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#ceedff'
   },
   avatarPlacement: {
     justifyContent: 'center',
@@ -315,6 +317,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: 'white',
     padding: 5,
-    width: 200
+    width: 100
+  },
+  chatBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 5,
+    backgroundColor: 'white',
+    borderRadius: 10
   }
 })
