@@ -21,8 +21,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getAllTaskAction } from './../store/task/action';
 import { getProfileAction } from './../store/user/action';
-import { saveChatData } from './../store/botler/action'
-import { ACCESS_TOKEN } from '../../config';
+import { saveChatData } from './../store/botler/action';
+import { ACCESS_TOKEN, GOOGLE_MAPS_API } from '../../config';
+
+import { rescheduleAll } from '../lib/update-notification'
 
 class BotPage extends Component {
   constructor() {
@@ -263,6 +265,38 @@ class BotPage extends Component {
     this.props.saveChatData(this.state.showChat)
   }
 
+  // @ update notification when user is 3 km away form home
+  watchCurrentLocation = () => {
+    let self = this
+    navigator.geolocation.watchPosition(
+      async (position) => {
+        console.log('ini latitude saya ===', position.coords.latitude, 'ini longtitude saya', position.coords.longitude)
+        let latitude = position.coords.latitude
+        let longitude = position.coords.longitude
+
+        let user = this.props.userData
+        console.log('ini data user', user)
+
+        let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${latitude},${longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
+        let distance = matrix.data.rows[0].elements[0].distance.value / 1000
+        let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
+
+        console.log('ini jarak tempuh dalam km', distance)
+                
+        if (distance >= 3) {
+          console.log('jaraknya lebih dari 3 kilo')
+          let allTask = this.props.taskData
+          // abis filter bedasarkan tanggal sekarang
+          // rescheduleAll(filteredTasks, user, travelTimeInSecond)
+        }
+      },
+      (error) => console.log(err),
+      // watch akan berjalan setiap 5 menit
+      {timeout: (1000 * 60 * 5)}
+    );
+  }
+
+
   render() {
     console.log(this.state.showChat)
     return (
@@ -332,7 +366,9 @@ class BotPage extends Component {
 
 const mapStateToProps = (state) => ({
   chatData: state.botlerState.chatLogs,
-});
+  userData: state.userState.userData,
+  taskData: state.taskState.taskData
+})
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getAllTaskAction,
