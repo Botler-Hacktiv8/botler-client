@@ -69,7 +69,8 @@ class BotPage extends Component {
     // @ set voice settings
     Tts.setDefaultLanguage('id-ID');
     Tts.setDefaultVoice('id-id-x-dfz#male_2-local')
-    this.chatLogsCheck()
+    this.chatLogsCheck();
+    this.watchCurrentLocation();
   }
 
   chatLogsCheck = () => {
