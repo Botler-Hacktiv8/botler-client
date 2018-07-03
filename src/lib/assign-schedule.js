@@ -14,7 +14,8 @@ module.exports = {
 
     // @ obj for id
     let newObjActivity = new Date(objTask.createdAt);
-    let notificationId = `${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}`;
+    let notificationId = `${newObjActivity.getMonth()}${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}${newObjActivity.getSeconds()}`;
+    console.log('assignSchedyule id:', notificationId);
 
     PushNotification.configure({
       onNotification: function(notification) {
@@ -36,8 +37,8 @@ module.exports = {
   cancelSchedule(objTask) {
     // @ obj for id
     let newObjActivity = new Date(objTask.createdAt);
-    let notificationId = `${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}`;
-    console.log('deleted task', notificationId);
+    let notificationId = `${newObjActivity.getMonth()}${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}${newObjActivity.getSeconds()}`;
+    console.log('Delete task id', notificationId);
 
     PushNotification.cancelLocalNotifications({ id: notificationId });
   }
