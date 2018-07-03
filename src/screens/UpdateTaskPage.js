@@ -60,8 +60,8 @@ class UpdateTaskPage extends Component {
 
   setStartTime = async() => {
     try {
-      let minutes = this.state.startTime.substring(0,2)
-      let hours = this.state.startTime.substring(3,5)
+      let hours = Number(this.state.startTime.substring(0,2))
+      let minutes = Number(this.state.startTime.substring(3,5))
       const {action, hour, minute} = await TimePickerAndroid.open({
         hour: hours,
         minute: minutes,
@@ -93,8 +93,8 @@ class UpdateTaskPage extends Component {
   }
 
   setFinishTime = async() => {
-    let minutes = this.state.finishTime.substring(0,2)
-    let hours = this.state.finishTime.substring(3,5)
+    let hours = Number(this.state.finishTime.substring(0,2))
+    let minutes = Number(this.state.finishTime.substring(3,5))
     try {
       const {action, hour, minute} = await TimePickerAndroid.open({
         hour: hours,
