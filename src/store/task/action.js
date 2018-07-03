@@ -1,5 +1,5 @@
 import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK, SUCCESS_POST, FAILED_POST } from './../action-type';
-import { assignSchedule } from './../../lib/assign-schedule';
+import { assignSchedule, cancelSchedule } from './../../lib/assign-schedule';
 // @ lib
 import axios from 'axios';
 
@@ -61,8 +61,16 @@ const failedPostAction = () => ({
 export const updateTaskAction = (taskId, payload) => {
   return (dispatch, getState) => {
     const token = getState().userState.userData.token;
+
+    const address = getState().userState.userData.address;
+    const destination = payload.address;
+    const timeStart = payload.timeStart;
+
     axios.patch(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, payload, { headers: { 'x-auth': token } })
       .then(response => {
+        // @ assign new schedule
+        assignSchedule(address, destination, timeStart, getState().userState.userData, response.data.task);
+
         dispatch(updateTask(response.data.task));
       }).catch((e) => {
         console.log(`Failed update task!`, e);
@@ -81,6 +89,7 @@ export const deleteTaskAction = (taskId) => {
     const token = getState().userState.userData.token;
     axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks/${taskId}`, { headers: { 'x-auth': token } })
       .then(response => {
+        cancelSchedule(response.data.task);
         dispatch(deleteTask(response.data.task));
       }).catch((e) => {
         console.log(`Failed update task!`, e);

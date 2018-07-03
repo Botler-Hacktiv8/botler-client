@@ -63,8 +63,8 @@ class BotPage extends Component {
     // @ retrieve token
     this._retrieveToken()
 
-    let greetChat = 
-    { 
+    let greetChat =
+    {
       speaker: 'Botler',
       chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?',
       style: this.state.botlerChatStyle,
