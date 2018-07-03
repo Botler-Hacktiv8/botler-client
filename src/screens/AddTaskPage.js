@@ -127,7 +127,7 @@ class AddTaskPage extends Component {
     return (
         <ScrollView>
       <View style={styles.container}>
-      <Header
+      <Header 
           rightComponent={
           <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
             <Icon

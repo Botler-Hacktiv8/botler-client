@@ -144,7 +144,7 @@ class BotPage extends Component {
         },
       })
       let speech = response.data.result.fulfillment.speech
-      let botReply =
+      let botReply = 
       {
         speaker: 'Botler',
         chat: speech,
@@ -177,7 +177,7 @@ class BotPage extends Component {
   //@ text chat input
   chatToBot = async() => {
     try {
-      let userChat =
+      let userChat = 
       {
         speaker: 'me',
         chat: this.state.chatText,
