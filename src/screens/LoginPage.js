@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  ToastAndroid
+  ToastAndroid,
+  Image
 } from 'react-native';
 import { FormInput, FormLabel } from 'react-native-elements'
 
@@ -59,10 +60,13 @@ class Welcome extends Component {
   render() {
     return (
         <View style={styles.container}>
-          <Text style={styles.welcome}>
-            BOTLER
-          </Text>
-          <View>
+          <View style={{padding: 15}}>
+            <Image
+              style={{ width: 155, height: 200 }}
+              source={require('../assets/launch_screen.png')}
+            />
+          </View>
+          <View style={styles.loginInfoStyle}>
             <FormLabel>Email</FormLabel>
             <FormInput 
               placeholder="Please enter your email address..."
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: '#ceedff',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -142,5 +146,11 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
+  },
+  loginInfoStyle: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    width: '90%'
   }
 });
