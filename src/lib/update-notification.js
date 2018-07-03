@@ -1,9 +1,9 @@
-import { assignSchedule } from '../lib/assign-schedule'
+import { updateSchedule } from '../lib/assign-schedule'
 
 module.exports = {
-  async rescheduleAll (tasks, user, travelTimeInSecond) {
+  async rescheduleAll (tasks, user, travelTimeInSecond, currentUserCoordinate) {
     tasks.forEach(task => {
-      assignSchedule(user.address, task.address, timeStart, objUser, objTask)
+      updateSchedule(task, user, travelTimeInSecond, currentUserCoordinate)
     })
   }
 }

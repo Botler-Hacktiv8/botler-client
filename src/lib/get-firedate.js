@@ -8,10 +8,10 @@ module.exports = {
    * @param {String} destination 
    * @param {Date} timeStart 
    */
-  async getFiredate(home, destination, timeStart) {
+  async getFiredate(home, destination, timeStart, additionTravelTime = 0) {
     try {
       const response = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${home}&destinations=${destination}&key=${GOOGLE_MAPS_API}`);
-      const result = response.data.rows[0].elements[0].duration.value;
+      const result = response.data.rows[0].elements[0].duration.value + additionTravelTime;
       let resultInText = response.data.rows[0].elements[0].duration.text;
 
       resultInText = resultInText.replace(/hours/i, 'jam')

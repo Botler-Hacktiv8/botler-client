@@ -269,25 +269,30 @@ class BotPage extends Component {
   watchCurrentLocation = () => {
     let self = this
     navigator.geolocation.watchPosition(
-      async (position) => {
-        console.log('ini latitude saya ===', position.coords.latitude, 'ini longtitude saya', position.coords.longitude)
-        let latitude = position.coords.latitude
-        let longitude = position.coords.longitude
+      async (position) => {  
+              
+        let currentUserCoordinate = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        }
 
         let user = this.props.userData
-        console.log('ini data user', user)
 
-        let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${latitude},${longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
+        let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
         let distance = matrix.data.rows[0].elements[0].distance.value / 1000
         let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
-
-        console.log('ini jarak tempuh dalam km', distance)
                 
         if (distance >= 3) {
-          console.log('jaraknya lebih dari 3 kilo')
           let allTask = this.props.taskData
-          // abis filter bedasarkan tanggal sekarang
-          // rescheduleAll(filteredTasks, user, travelTimeInSecond)
+          let filteredTasks = allTask.filter(task => {
+            if (new Date(task.timeStart) > new Date()){
+              return task
+            } 
+          })
+
+          rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
+        } else {
+          rescheduleAll(filteredTasks, user)
         }
       },
       (error) => console.log(err),
