@@ -9,7 +9,7 @@ import {
   ToastAndroid,
   ScrollView
 } from 'react-native'
-import { FormInput, FormLabel, Icon } from 'react-native-elements';
+import { FormInput, FormLabel, Icon, Header } from 'react-native-elements'
 
 // @ redux config
 import { bindActionCreators } from 'redux';
@@ -127,7 +127,19 @@ class AddTaskPage extends Component {
     return (
         <ScrollView>
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10, paddingTop: 20}}>ADD NEW TASK</Text>
+        <Header 
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>ADD NEW TASK</Text>
+          }
+          leftComponent={
+            <Icon
+              name='chevron-left'
+              type='font-awesome'
+              color='white'
+              onPress={() => this.props.navigation.goBack()}
+            />
+          }
+        />
         <View>
           <FormLabel>Name Of Activity:</FormLabel>
           <FormInput
@@ -183,18 +195,19 @@ class AddTaskPage extends Component {
           </View>
           </View>
         </View>
-        <TouchableOpacity onPress={ this.addNewTask }>
-          <View style={styles.submitButton}>
-            <Icon
-              name='check'
-              type='font-awesome'
-              size={20}
-              color='white'
-            />
-            <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+        <View style={{ alignItems: 'center'}}>
+          <TouchableOpacity onPress={ this.addNewTask }>
+            <View style={styles.submitButton}>
+              <Icon
+                name='check'
+                type='font-awesome'
+                size={20}
+                color='white'
+              />
+              <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}> SUBMIT</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <View style={styles.buttonCancel}>
               <Icon
                 name='times'
@@ -205,7 +218,8 @@ class AddTaskPage extends Component {
               <Text style={{color: 'red', fontSize: 18, fontWeight: 'bold'}}> CANCEL</Text>
             </View>
           </TouchableOpacity>
-      </View>
+        </View>
+        </View>
       </ScrollView>
     );
   }
@@ -225,7 +239,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
     backgroundColor: 'white'
   },
   button: {

@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { postTaskAction } from './../store/task/action';
 
 class ConfirmPage extends Component {
-
   static navigationOptions = {
     drawerLabel: () => null
   }

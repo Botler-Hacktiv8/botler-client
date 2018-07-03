@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, AsyncStorage, Alert, Linking } from 'react-native';
-import { FormLabel, Icon } from 'react-native-elements'
+import { FormLabel, Icon, Header } from 'react-native-elements'
 import axios from 'axios';
 import { GOOGLE_MAPS_API } from '../../config';
 // @ redux
@@ -114,6 +114,19 @@ class TaskDetailPage extends Component {
     else {
       return (
         <View style={styles.container}>
+          <Header 
+            centerComponent={
+              <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>ADD NEW TASK</Text>
+            }
+            leftComponent={
+              <Icon
+                name='chevron-left'
+                type='font-awesome'
+                color='white'
+                onPress={() => this.props.navigation.goBack()}
+              />
+            }
+          />
           <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'space-around', width: '100%' }}>
             <TouchableOpacity onPress={this.deleteTask}>
               <Icon
@@ -143,11 +156,12 @@ class TaskDetailPage extends Component {
               <Text style={{fontSize: 24, marginBottom: 10}}>{this.state.distance}</Text>
             </View>
           </View>
+          <View style={{ alignItems: 'center' }}>
           <FormLabel>Location:</FormLabel>
           <Text style={{ margin: 5 }}>{this.state.taskDetail.locationName}</Text>
           <FormLabel>Address:</FormLabel>
           <View style={{ margin: 5, width: '80%' }}>
-            <Text style={{ textAlign: 'center' }}>{this.state.taskDetail.address}</Text>
+            <Text style={{ textAlign: 'center', paddingBottom: 4 }}>{this.state.taskDetail.address}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <View style={ styles.timeStyle }>
@@ -165,6 +179,7 @@ class TaskDetailPage extends Component {
               <FormLabel>Time End:</FormLabel>
               <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).toGMTString().substring(0, 25)}</Text>
             </View>
+          </View>
           </View>
           <TouchableOpacity onPress={() => this.showDetailOnMap()}>
             <View style={styles.buttonMap}>
@@ -201,17 +216,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(TaskDetailPage);
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
-    alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'white'
   },
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: 'white'
   },
   titleStyle: {
     fontWeight: 'bold',

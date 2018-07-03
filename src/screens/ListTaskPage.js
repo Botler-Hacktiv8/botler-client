@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity, Picker } from 'react-native';
+import { Header, Icon } from 'react-native-elements'
 import Timeline from 'react-native-timeline-listview';
 
 import { connect } from 'react-redux';
@@ -8,8 +9,11 @@ class ListTaskPage extends Component {
   constructor() {
     super()
     this.state = {
-      data: [],
-      loading: true
+      data: {},
+      compiledData: [],
+      loading: true,
+      dateArr: [],
+      selectedDate: ''
     }
   }
 
@@ -18,8 +22,8 @@ class ListTaskPage extends Component {
   }
 
   compileData = () => {
-    let rawData = this.props.taskData;
-    rawData.sort(function(a, b) {return a.timeStart - b.timeStart});
+    let rawData = this.props.taskData
+    rawData = rawData.sort(function(a,b){return new Date(a.timeStart) - new Date(b.timeStart)})
     let finalData = [];
     let finishDate = [];
     for (let i = 0; i < rawData.length; i++) {
@@ -47,9 +51,13 @@ class ListTaskPage extends Component {
       }
       finalData.push(dataObj)
     }
+    console.log(finalData)
     this.setState({
-      data: finalData,
-      loading: false
+      data: finalData[0],
+      loading: false,
+      dateArr: finishDate,
+      compiledData: finalData,
+      selectedDate: finishDate[0]
     })
   }
 
@@ -59,28 +67,54 @@ class ListTaskPage extends Component {
     })
   }
 
+  changeDate = (date) => {
+    let newData = {}
+    this.state.compiledData.forEach(data => {
+      if(data.date == date) {
+        newData = data
+      }
+    })
+    this.setState({
+      data: newData,
+      selectedDate: date
+    })
+  }
+
   renderTaskList = () => {
     return (
-       this.state.data.map( (timeData, i) => (
-        <View style={{ flexDirection: 'column', padding: 10 }} key={timeData.date + i}>
-        <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{timeData.date}</Text>
-        <Timeline 
-          style={styles.list}
-          data={timeData.data}
-          circleSize={20}
-          circleColor='rgb(45,156,219)'
-          lineColor='rgb(45,156,219)'
-          timeContainerStyle={{minWidth:52, marginTop: -5}}
-          timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', padding:5, borderRadius:13}}
-          descriptionStyle={{color:'gray'}}
-          options={{
-            style:{paddingTop:5}
-          }}
-          onEventPress={ (e) => this.viewDetail(e)}
-        />
-        </View>
-      ))
+      <View style={{ flexDirection: 'column', padding: 10 }}>
+      <Timeline 
+        style={styles.list}
+        data={this.state.data.data}
+        circleSize={20}
+        circleColor='rgb(45,156,219)'
+        lineColor='rgb(45,156,219)'
+        timeContainerStyle={{minWidth:52}}
+        timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', padding:5, borderRadius:13}}
+        descriptionStyle={{color:'gray'}}
+        options={{
+          style:{paddingTop:5}
+        }}
+        onEventPress={ (e) => this.viewDetail(e)}
+      />
+      </View>
     );
+  }
+
+  renderPicker = () => {
+    let date = this.state.dateArr.map( (date, i) => {
+      return <Picker.Item key={i} value={date} label={date} />
+    });
+    return (
+      <View style={styles.pickerStyle}>
+        <Picker
+          selectedValue={this.state.selectedDate}
+          style={{ height: 50, width: 200 }}
+          onValueChange={this.changeDate}>
+          {date}
+        </Picker>
+      </View>
+    )
   }
 
   render() {
@@ -93,6 +127,20 @@ class ListTaskPage extends Component {
     } else {
       return (
         <View style={styles.container}>
+          <Header 
+            centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>TASK LIST</Text>
+            }
+            leftComponent={
+              <Icon
+                name='chevron-left'
+                type='font-awesome'
+                color='white'
+                onPress={() => this.props.navigation.goBack()}
+              />
+            }
+          />
+          {this.renderPicker()}
           <ScrollView>
             {this.renderTaskList()}
           </ScrollView>
@@ -105,9 +153,8 @@ class ListTaskPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-		paddingTop:65,
-		backgroundColor:'white'
+    backgroundColor:'white',
+    flexDirection: 'column'
   },
   list: {
     flex: 1,
@@ -120,6 +167,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white'
   },
+  pickerStyle: {
+    alignItems: 'center'
+  }
 })
 
 const mapStateToProps = (state) => ({

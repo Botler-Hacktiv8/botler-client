@@ -11,6 +11,8 @@ import TaskDetailPage from './src/screens/TaskDetailPage';
 import AddTaskPage from './src/screens/AddTaskPage';
 import UpdateTaskPage from './src/screens/UpdateTaskPage';
 import ConfirmPage from './src/screens/ConfirmPage';
+import Logout from './src/screens/Logout'
+
 
 // @ redux setup
 import { Provider } from 'react-redux';
@@ -36,6 +38,7 @@ const RootDrawerNav = createDrawerNavigator({
   Confirm: ConfirmPage,
   AddTask: AddTaskPage,
   UpdateTask: UpdateTaskPage,
+  Logout: Logout
 }, {
   initialRouteName: 'Home'
 })
