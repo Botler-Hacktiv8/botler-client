@@ -21,6 +21,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getAllTaskAction } from './../store/task/action';
 import { getProfileAction } from './../store/user/action';
+import { saveChatData } from './../store/botler/action'
 import { ACCESS_TOKEN } from '../../config';
 
 class BotPage extends Component {
@@ -63,21 +64,35 @@ class BotPage extends Component {
     // @ retrieve token
     this._retrieveToken()
 
-    let greetChat =
-    {
-      speaker: 'Botler',
-      chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?',
-      style: this.state.botlerChatStyle,
-      fontStyle: this.state.botlerChatFontStyle
-    }
-    let arrayChat = []
-    arrayChat.push(greetChat)
-    this.setState({showChat: arrayChat})
+    // @ set voice settings
     Tts.setDefaultLanguage('id-ID');
     Tts.setDefaultVoice('id-id-x-dfz#male_2-local')
-    Tts.getInitStatus().then(() => {
-      Tts.speak('Halo, nama saya Botler. Apa yang bisa saya bantu?');
-    });
+    this.chatLogsCheck()
+  }
+
+  chatLogsCheck = () => {
+    let lengthOfChat = this.props.chatData.length
+    console.log('panjang chat: ',lengthOfChat)
+    if(lengthOfChat === 0) {
+      let greetChat =
+      {
+        speaker: 'Botler',
+        chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?',
+        style: this.state.botlerChatStyle,
+        fontStyle: this.state.botlerChatFontStyle
+      }
+      let arrayChat = []
+      arrayChat.push(greetChat)
+      this.setState({ showChat: arrayChat })
+      Tts.getInitStatus().then(() => {
+        Tts.speak('Halo, nama saya Botler. Apa yang bisa saya bantu?');
+      });
+    } else {
+      console.log(this.props.chatData[lengthOfChat - 1] )
+      this.setState({
+        showChat: this.props.chatData
+      })
+    }
   }
   
   // @ retrive token from local storage
@@ -243,12 +258,18 @@ class BotPage extends Component {
       });
   }
 
+  // @ save chat history
+  saveChat = () => {
+    this.props.saveChatData(this.state.showChat)
+  }
+
   render() {
+    console.log(this.state.showChat)
     return (
       <View style={styles.container}>
         <Header 
           rightComponent={
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+          <TouchableOpacity onPress={() => { this.saveChat(); this.props.navigation.navigate('AddTask') }}>
             <Icon
               name='plus'
               type='font-awesome'
@@ -260,7 +281,7 @@ class BotPage extends Component {
             <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>BOTLER</Text>
             }
           leftComponent={
-          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+          <TouchableOpacity onPress={() => { this.saveChat(); this.props.navigation.openDrawer() }}>
             <Icon
               name='bars'
               type='font-awesome'
@@ -309,12 +330,17 @@ class BotPage extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  chatData: state.botlerState.chatLogs,
+});
+
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getAllTaskAction,
-  getProfileAction
+  getProfileAction,
+  saveChatData
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(BotPage);
+export default connect(mapStateToProps, mapDispatchToProps)(BotPage);
 
 const styles = StyleSheet.create({
   container: {
