@@ -7,7 +7,6 @@ import {
   TimePickerAndroid,
   DatePickerAndroid,
   ScrollView,
-  AsyncStorage,
   ToastAndroid
 } from 'react-native'
 import { FormInput, FormLabel, Icon } from 'react-native-elements'
@@ -37,29 +36,16 @@ class UpdateTaskPage extends Component {
   }
 
   componentDidMount() {
-    this._retrieveToken();
-  }
-
-  // @ retrive token from local storage
-  _retrieveToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('UserToken');
-      console.log('_retrieveToken', value);
-      this.setState({ _UserToken: value }, () => {
-        this.prepareState();
-      });
-     } catch (e) {
-       console.log('Failed UserToken from storage', e);
-     }
+    this.prepareState();
   }
 
   prepareState = () => {
-    let task = this.props.navigation.getParam('task')
-    let _id = task._id;
-    let startTime = task.timeStart.substring(11, 19)
-    let startDate = task.timeStart.split('T')[0]
-    let finishTime = task.timeEnd.substring(11, 19)
-    let finishDate = task.timeEnd.split('T')[0]
+    const task = this.props.navigation.getParam('task');
+    const _id = task._id;
+    const startTime = task.timeStart.substring(11, 19);
+    const startDate = task.timeStart.split('T')[0];
+    const finishTime = task.timeEnd.substring(11, 19);
+    const finishDate = task.timeEnd.split('T')[0];
     this.setState({
       _id: _id,
       description: task.text,
@@ -151,7 +137,7 @@ class UpdateTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-    this.props.updateTaskAction(taskId, payload, this.state._UserToken);
+    this.props.updateTaskAction(taskId, payload);
     this.props.navigation.goBack();
     ToastAndroid.show('Success Update Task', ToastAndroid.SHORT);
 

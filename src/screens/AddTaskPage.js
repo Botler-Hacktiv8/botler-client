@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TimePickerAndroid,
   DatePickerAndroid,
-  AsyncStorage,
   ToastAndroid,
   ScrollView
 } from 'react-native'
@@ -15,9 +14,10 @@ import { FormInput, FormLabel, Icon, Header } from 'react-native-elements'
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
+import { postTaskAction } from './../store/task/action';
 
 class AddTaskPage extends Component {
+
   static navigationOptions = {
     drawerLabel: () => null
   }
@@ -32,23 +32,7 @@ class AddTaskPage extends Component {
       startTime: 'No Time selected',
       finishDate: 'No Date selected',
       finishTime: 'No Time selected',
-      _UserToken: '',
     }
-  }
-
-  componentWillMount() {
-    this._retrieveToken();
-  }
-
-  // @ retrive token from local storage
-  _retrieveToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('UserToken');
-      console.log('Hasil get Token from storage', value);
-      this.setState({ _UserToken: value });
-     } catch (e) {
-       console.log('Failed UserToken from storage', e);
-     }
   }
 
   //@ adding new task to db
@@ -60,10 +44,16 @@ class AddTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-
-    console.log('ini time start dan end', payload.timeStart, payload.timeEnd)
-    // navigate to confirm page
-    this.props.navigation.navigate('Confirm', { payload }) 
+    this.props.postTaskAction(payload);
+    // @ waiting change state
+    setTimeout(() =>{
+      if (this.props.successPost) {
+        ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+        this.props.navigation.navigate('Home')
+      } else {
+        ToastAndroid.show('Failed Post Task', ToastAndroid.LONG);
+      }
+    }, 500) 
   }
 
   setStartTime = async() => {
@@ -236,15 +226,11 @@ class AddTaskPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  taskData: state.taskState.taskData,
   successPost: state.taskState.successPost
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  getAllTaskAction,
   postTaskAction,
-  updateTaskAction,
-  deleteTaskAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTaskPage);

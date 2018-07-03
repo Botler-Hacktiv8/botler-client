@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   View,
-  Button,
   StyleSheet,
   Text,
   ScrollView,
@@ -12,17 +11,16 @@ import {
   TextInput
 } from 'react-native'
 import { Icon, Header } from 'react-native-elements';
+
 import SpeechAndroid from 'react-native-android-voice';
 import Tts from 'react-native-tts';
-import axios from 'axios'
+import axios from 'axios';
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
+import { getAllTaskAction } from './../store/task/action';
 import { getProfileAction } from './../store/user/action';
-
 import { ACCESS_TOKEN } from '../../config';
 
 class BotPage extends Component {
@@ -34,13 +32,14 @@ class BotPage extends Component {
       showChat: [],
       recievedData: null,
       chatText: '',
-      _UserToken: '',
+      userToken: '',
     };
   }
 
   componentWillMount () {
-    // retrieve token
+    // @ retrieve token
     this._retrieveToken()
+
     let greetChat = { speaker: 'Botler', chat: 'Halo, nama saya Botler. Apa yang bisa saya bantu?' }
     let arrayChat = []
     arrayChat.push(greetChat)
@@ -56,10 +55,9 @@ class BotPage extends Component {
   _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem('UserToken');
-      console.log('_retrieveToken', value);
-      this.setState({ _UserToken: value }, () => {
-        this.props.getProfileAction(this.state._UserToken);
-        this.props.getAllTaskAction(this.state._UserToken)
+      this.setState({ userToken: value }, () => {
+        this.props.getProfileAction(this.state.userToken);
+        this.props.getAllTaskAction(this.state.userToken);
       });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
@@ -135,7 +133,6 @@ class BotPage extends Component {
         showChat: currentArray,
         recievedData: response.data.result.parameters
       });
-      // console.log(response)
       return response;
     } catch (error) {
       console.log(error)
@@ -190,7 +187,7 @@ class BotPage extends Component {
   // @ remove token and move to login page
   logout = () => {
     this._removeToken();
-    axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state._UserToken } })
+    axios.delete(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/logout`, { headers: { 'x-auth': this.state.userToken } })
       .then(() => {
         this.props.screenProps.logout();
         // this.props.navigation.goBack();
@@ -266,21 +263,12 @@ class BotPage extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  taskData: state.taskState.taskData,
-  successPost: state.taskState.successPost,
-  successPost: state.taskState.successPost
-});
-
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getAllTaskAction,
-  postTaskAction,
-  updateTaskAction,
-  deleteTaskAction,
   getProfileAction
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(BotPage);
+export default connect(null, mapDispatchToProps)(BotPage);
 
 const styles = StyleSheet.create({
   container: {
