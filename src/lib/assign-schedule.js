@@ -41,6 +41,42 @@ module.exports = {
     console.log('Delete task id', notificationId);
 
     PushNotification.cancelLocalNotifications({ id: notificationId });
+  },
+
+  async updateSchedule(task, user, additionTravelTime = 0, currentUserCoordinate = null) {    
+    // @ firedate
+    let fireDate = await getFiredate(user.address, task.address, new Date(task.timeStart), additionTravelTime);
+    console.log('firedate yang Baru->', fireDate[0]);
+
+    let activityDateObj = new Date(task.timeStart);
+    let timeBeginActivity = `${activityDateObj.getHours()}:${activityDateObj.getMinutes()}`;
+
+    // @ obj for id
+    let newObjActivity = new Date(task.createdAt);
+    let notificationId = `${newObjActivity.getMonth()}${newObjActivity.getDate()}${newObjActivity.getHours()}${newObjActivity.getMinutes()}${newObjActivity.getSeconds()}`;
+    console.log('assignSchedyule id:', notificationId);
+
+    PushNotification.configure({
+      onNotification: function(notification) {
+        // console.log('onNotification', notification);
+        if (currentUserCoordinate === null) {
+          Linking.openURL(`https://www.google.co.id/maps/dir/${user.address}/${task.address}`);
+        } else {
+          Linking.openURL(`https://www.google.co.id/maps/dir/${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}/${user.address}/${task.address}`);
+        }
+       
+      }
+    })
+
+    PushNotification.localNotificationSchedule({
+      id: notificationId,
+      title: `Lakukan persiapan untuk aktivitas`,
+      message: `Aktivitas pada ${timeBeginActivity} memiliki waktu tempuh ${fireDate[1]}`,
+      date: fireDate[0], // new Date(Date.now() + (3 * 1000))
+      bigText: `Aktivitas anda "${objTask.text}" akan dimulai pada ${timeBeginActivity}. Perkiraan waktu tempuh adalah ${fireDate[1]}`,
+      vibrate: true,
+      vibration: 300
+    })
   }
 }
 

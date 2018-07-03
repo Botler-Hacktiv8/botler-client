@@ -21,8 +21,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getAllTaskAction } from './../store/task/action';
 import { getProfileAction } from './../store/user/action';
-import { saveChatData } from './../store/botler/action'
-import { ACCESS_TOKEN } from '../../config';
+import { saveChatData } from './../store/botler/action';
+import { ACCESS_TOKEN, GOOGLE_MAPS_API } from '../../config';
+
+import { rescheduleAll } from '../lib/update-notification'
 
 class BotPage extends Component {
   constructor() {
@@ -263,6 +265,43 @@ class BotPage extends Component {
     this.props.saveChatData(this.state.showChat)
   }
 
+  // @ update notification when user is 3 km away form home
+  watchCurrentLocation = () => {
+    let self = this
+    navigator.geolocation.watchPosition(
+      async (position) => {  
+              
+        let currentUserCoordinate = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        }
+
+        let user = this.props.userData
+
+        let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
+        let distance = matrix.data.rows[0].elements[0].distance.value / 1000
+        let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
+                
+        if (distance >= 3) {
+          let allTask = this.props.taskData
+          let filteredTasks = allTask.filter(task => {
+            if (new Date(task.timeStart) > new Date()){
+              return task
+            } 
+          })
+
+          rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
+        } else {
+          rescheduleAll(filteredTasks, user)
+        }
+      },
+      (error) => console.log(err),
+      // watch akan berjalan setiap 5 menit
+      {timeout: (1000 * 60 * 5)}
+    );
+  }
+
+
   render() {
     console.log(this.state.showChat)
     return (
@@ -332,7 +371,9 @@ class BotPage extends Component {
 
 const mapStateToProps = (state) => ({
   chatData: state.botlerState.chatLogs,
-});
+  userData: state.userState.userData,
+  taskData: state.taskState.taskData
+})
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getAllTaskAction,

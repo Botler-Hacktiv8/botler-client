@@ -53,7 +53,7 @@ class AddTaskPage extends Component {
       } else {
         ToastAndroid.show('Failed Post Task', ToastAndroid.LONG);
       }
-    }, 500) 
+    }, 1000) 
   }
 
   setStartTime = async() => {
