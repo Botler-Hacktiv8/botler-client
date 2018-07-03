@@ -10,3 +10,5 @@ export const DELETE_TASK = 'DELETE_TASK';
 
 export const SUCCESS_POST = 'SUCCESS_POST';
 export const FAILED_POST = 'FAILED_POST';
+
+export const SAVE_CHAT = 'SAVE_CHAT'
