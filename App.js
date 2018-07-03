@@ -12,7 +12,7 @@ import AddTaskPage from './src/screens/AddTaskPage';
 import UpdateTaskPage from './src/screens/UpdateTaskPage';
 import ConfirmPage from './src/screens/ConfirmPage';
 import Logout from './src/screens/Logout'
-import Welcome from './src/screens/Welcome';
+
 
 // @ redux setup
 import { Provider } from 'react-redux';

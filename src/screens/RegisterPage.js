@@ -17,11 +17,8 @@ class RegisterPage extends Component {
 
   registerUser = async () => {
     const { firstName, lastName, email, address, password, confirm } = this.state;
-
     if (password !== confirm) {
-      this.setState({
-        errorMessage: 'confirm password don\'t match'
-      });
+      this.setState({ errorMessage: 'confirm password don\'t match' });
     } else {
       const payload = {
         firstName,
@@ -30,18 +27,14 @@ class RegisterPage extends Component {
         password,
         address
       }
-  
-      // console.log('register user', payload);
       axios.post(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/register`, payload)
         .then(response => {
           this._storeToken(response.headers['x-auth']);
           ToastAndroid.show('Register Success', ToastAndroid.SHORT);
           this.props.screenProps.login();
-          // this.props.navigation.navigate('Home')
         }).catch(e => {
           console.log(`Register failed`, e);
           this.setState({
-            // errorMessage: e.response.data.message
             errorMessage: 'register failed, please input data correctly!',
           })
         })

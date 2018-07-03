@@ -5,17 +5,14 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  ScrollView,
   ToastAndroid
 } from 'react-native';
-import { FormInput, FormLabel, Button } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { FormInput, FormLabel } from 'react-native-elements'
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getBotlerDataAction } from './../store/botler/action';
-import { black } from 'ansi-colors';
 import axios from 'axios';
 
 class Welcome extends Component {
@@ -44,7 +41,6 @@ class Welcome extends Component {
         this._storeToken(response.headers['x-auth']);
         ToastAndroid.show('Login Success', ToastAndroid.SHORT);
         this.props.screenProps.login();
-        // this.props.navigation.navigate('Home')
       }).catch(() => {
         this.setState({
           errorMessage: 'email or password not match'

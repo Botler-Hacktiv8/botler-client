@@ -18,7 +18,7 @@ class ListTaskPage extends Component {
   }
 
   componentDidMount () {
-    this.compileData()
+    this.compileData();
   }
 
   compileData = () => {
