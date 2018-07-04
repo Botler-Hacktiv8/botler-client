@@ -1,4 +1,4 @@
-import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK, SUCCESS_POST, FAILED_POST } from './../action-type';
+import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK, SUCCESS_POST, FAILED_POST, RESET_TASK } from './../action-type';
 import { assignSchedule, cancelSchedule } from './../../lib/assign-schedule';
 // @ lib
 import axios from 'axios';
@@ -100,4 +100,8 @@ export const deleteTaskAction = (taskId) => {
 const deleteTask = (payload) => ({
   type: DELETE_TASK,
   payload: payload,
+})
+
+export const resetTaskData = () => ({
+  type: RESET_TASK
 })

@@ -1,4 +1,4 @@
-import { GET_PROFILE } from './../action-type';
+import { GET_PROFILE, RESET_USER_DATA } from './../action-type';
 import axios from 'axios';
 
 // @ get profile
@@ -21,3 +21,7 @@ const getProfile = (payload) => ({
   type: GET_PROFILE,
   payload: payload
 });
+
+export const resetUserData = () => ({
+  type: RESET_USER_DATA
+})

@@ -1,4 +1,4 @@
-import { EXAMPLE_ACTION, SAVE_CHAT } from './../action-type';
+import { EXAMPLE_ACTION, SAVE_CHAT, RESET_CHAT } from './../action-type';
 
 const initialState = {
   botlerData: [],
@@ -16,6 +16,11 @@ const reducer = (state = {...initialState}, action) => {
       return {
         ...state,
         chatLogs: action.payload,
+      }
+    case RESET_CHAT:
+      return {
+        ...state,
+        chatLogs: [],
       }
     default:
       return state;

@@ -23,42 +23,48 @@ class ListTaskPage extends Component {
 
   compileData = () => {
     let rawData = this.props.taskData
-    rawData = rawData.sort(function(a,b){return new Date(a.timeStart) - new Date(b.timeStart)})
-    let finalData = [];
-    let finishDate = [];
-    for (let i = 0; i < rawData.length; i++) {
-      let dataObj = {}
-      let datei = new Date(rawData[i].timeStart).toGMTString().substring(0, 16)
-      if(finishDate.includes(datei)) {
-        continue;
-      } else {
-        finishDate.push(datei)
-        dataObj.date = datei
-        let dataArr = []
-        for (let j = 0; j < rawData.length; j++) {
-          let datej = new Date(rawData[j].timeStart).toGMTString().substring(0, 16)
-          let time = rawData[j].timeStart.split('T')
-          if ( datei === datej ) {
-            dataArr.push({
-              time: time[1].substring(0, 5),
-              title: rawData[j].text,
-              description: rawData[j].locationName + ', ' + rawData[j].address,
-              _id: rawData[j]._id
-            })
+    console.log('rawData: ', rawData)
+    if (rawData.length !== 0) {
+      rawData = rawData.sort(function(a,b){return new Date(a.timeStart) - new Date(b.timeStart)})
+      let finalData = [];
+      let finishDate = [];
+      for (let i = 0; i < rawData.length; i++) {
+        let dataObj = {}
+        let datei = new Date(rawData[i].timeStart).toGMTString().substring(0, 16)
+        if(finishDate.includes(datei)) {
+          continue;
+        } else {
+          finishDate.push(datei)
+          dataObj.date = datei
+          let dataArr = []
+          for (let j = 0; j < rawData.length; j++) {
+            let datej = new Date(rawData[j].timeStart).toGMTString().substring(0, 16)
+            let time = rawData[j].timeStart.split('T')
+            if ( datei === datej ) {
+              dataArr.push({
+                time: time[1].substring(0, 5),
+                title: rawData[j].text,
+                description: rawData[j].locationName + ', ' + rawData[j].address,
+                _id: rawData[j]._id
+              })
+            }
           }
+          dataObj.data = dataArr
         }
-        dataObj.data = dataArr
+        finalData.push(dataObj)
       }
-      finalData.push(dataObj)
+      this.setState({
+        data: finalData[0],
+        loading: false,
+        dateArr: finishDate,
+        compiledData: finalData,
+        selectedDate: finishDate[0]
+      })
+    } else {
+      this.setState({
+        loading: false
+      })
     }
-    console.log(finalData)
-    this.setState({
-      data: finalData[0],
-      loading: false,
-      dateArr: finishDate,
-      compiledData: finalData,
-      selectedDate: finishDate[0]
-    })
   }
 
   viewDetail = (data) => {
@@ -124,7 +130,7 @@ class ListTaskPage extends Component {
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       );
-    } else {
+    } else if (this.state.data.date !== undefined ) {
       return (
         <View style={styles.container}>
           <Header 
@@ -157,6 +163,38 @@ class ListTaskPage extends Component {
         </View>
       );
     }
+    else {
+      return (
+        <View style={styles.container}>
+          <Header 
+          rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+            <Icon
+              name='plus'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>MY SCHEDULE</Text>
+            }
+          leftComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+        />
+          <View style={styles.warningView}>
+            <Text style={styles.warning}>Your schedule is empty...</Text>
+          </View>
+        </View>
+      )
+    }
   }
 }
 
@@ -179,6 +217,16 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     alignItems: 'center'
+  },
+  warning: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  warningView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
 
