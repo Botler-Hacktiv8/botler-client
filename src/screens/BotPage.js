@@ -75,7 +75,6 @@ class BotPage extends Component {
 
   chatLogsCheck = () => {
     let lengthOfChat = this.props.chatData.length
-    console.log('panjang chat: ',lengthOfChat)
     if(lengthOfChat === 0) {
       let greetChat =
       {
@@ -91,7 +90,6 @@ class BotPage extends Component {
         Tts.speak('Halo, nama saya Botler. Apa yang bisa saya bantu?');
       });
     } else {
-      console.log(this.props.chatData[lengthOfChat - 1] )
       this.setState({
         showChat: this.props.chatData
       })
@@ -162,15 +160,27 @@ class BotPage extends Component {
         },
       })
       let speech = response.data.result.fulfillment.speech
-      let botReply = 
-      {
-        speaker: 'Botler',
-        chat: speech,
-        style: this.state.botlerChatStyle,
-        fontStyle: this.state.botlerChatFontStyle
+      let botReply = {}
+      if (speech === '') {
+        botReply = 
+        {
+          speaker: 'Botler',
+          chat: `Maaf, saya tidak dapat memproses permintaan anda. Saya rekomendasikan untuk menggunakan perintah seperti 'buat aktifitas'`,
+          style: this.state.botlerChatStyle,
+          fontStyle: this.state.botlerChatFontStyle
+        }
+      } else {
+        botReply = 
+        {
+          speaker: 'Botler',
+          chat: speech,
+          style: this.state.botlerChatStyle,
+          fontStyle: this.state.botlerChatFontStyle
+        }
       }
-      Tts.speak(speech);
-      if (speech.includes('sedang saya proses')) {
+      Tts.speak(botReply.chat);
+      if (botReply.chat
+        .includes('sedang saya proses')) {
         let dataParameter;
         response.data.result.contexts.forEach(element => {
           if (element.name == 'membuataktivitasbaru-followup') {
@@ -195,18 +205,20 @@ class BotPage extends Component {
   //@ text chat input
   chatToBot = async() => {
     try {
-      let userChat = 
-      {
-        speaker: 'me',
-        chat: this.state.chatText,
-        style: this.state.userChatStyle,
-        fontStyle: this.state.chatFontStyle
+      if (this.state.chatText !== "") {
+        let userChat = 
+        {
+          speaker: 'me',
+          chat: this.state.chatText,
+          style: this.state.userChatStyle,
+          fontStyle: this.state.chatFontStyle
+        }
+        let arrayChat = this.state.showChat
+        arrayChat.push(userChat)
+        this.setState({ showChat: arrayChat })
+        const dialogflowResponse = await this.getDialogFlow(userChat.chat);
+        this.setState({ chatText: ''})
       }
-      let arrayChat = this.state.showChat
-      arrayChat.push(userChat)
-      this.setState({ showChat: arrayChat })
-      const dialogflowResponse = await this.getDialogFlow(userChat.chat);
-      this.setState({ chatText: ''})
     } catch (error) {
       console.log(error)
     }
@@ -216,7 +228,6 @@ class BotPage extends Component {
   onSpeak = async() => {
     try {
       const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.INDONESIAN);
-      console.log('spokenText: ',spokenText)
       if (spokenText == 'lihat aktivitas') {
         this.props.navigation.navigate('ListTask')
       } else if (spokenText == 'keluar') {
@@ -304,7 +315,6 @@ class BotPage extends Component {
 
 
   render() {
-    console.log(this.state.showChat)
     return (
       <View style={styles.container}>
         <Header 

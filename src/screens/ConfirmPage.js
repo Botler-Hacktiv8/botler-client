@@ -13,7 +13,13 @@ class ConfirmPage extends Component {
   }
 
   state = {
-    payload: {},
+    payload: {
+      text: '',
+      locationName: '',
+      address: '',
+      timeStart: '',
+      timeEnd: ''
+    },
   }
 
   componentWillMount () {
@@ -36,31 +42,23 @@ class ConfirmPage extends Component {
   }
 
   formatTime = (date) => {
-    let hour = date.getHours();
-    let minute = date.getMinutes();
-    return `${hour}:${minute}`
+    return `${ date.toString().substring(0,3) }, ${date.toString().substring(4, 15)} ${date.toString().substring(16, 24)}`
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 20}}>CONFIRM!</Text>
-        <FormLabel>Activity:</FormLabel>
-        <Text>{ this.state.payload.text }</Text>
-        <FormLabel>Lokasi:</FormLabel>
-        <Text>{ this.state.payload.locationName }</Text>
-        <FormLabel>Alamat:</FormLabel>
-        <Text>{ this.state.payload.address }</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={ styles.timeStyle }>
-            <FormLabel>Time Start:</FormLabel>
-            <Text>{ this.formatTime(this.state.payload.timeStart) }</Text>
-          </View>
-          <View style={ styles.timeStyle }>
-            <FormLabel>Time End:</FormLabel>
-            <Text>{ this.formatTime(this.state.payload.timeEnd) }</Text>
-          </View>
-        </View>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 20}}>Is the Data Correct?</Text>
+        <FormLabel labelStyle={styles.textStyle}>Activity:</FormLabel>
+        <Text style={styles.textStyle}>{ this.state.payload.text }</Text>
+        <FormLabel labelStyle={styles.textStyle}>Lokasi:</FormLabel>
+        <Text style={styles.textStyle}>{ this.state.payload.locationName }</Text>
+        <FormLabel labelStyle={styles.textStyle}>Alamat:</FormLabel>
+        <Text style={styles.textStyle}>{ this.state.payload.address }</Text>
+        <FormLabel labelStyle={styles.textStyle}>Time Start:</FormLabel>
+        <Text style={styles.textStyle}>{ this.formatTime(this.state.payload.timeStart) }</Text>
+        <FormLabel labelStyle={styles.textStyle}>Time End:</FormLabel>
+        <Text style={styles.textStyle}>{ this.formatTime(this.state.payload.timeEnd) }</Text>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <View style={ styles.buttonNo }>
@@ -72,7 +70,7 @@ class ConfirmPage extends Component {
               />
               <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}> No</Text>
             </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
           <TouchableOpacity onPress={this.addTask}>
             <View style={ styles.buttonYes }>
               <Icon
@@ -120,9 +118,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginLeft: 10
   },
-  timeStyle: {
-    flexDirection: 'column',
-    alignItems: 'center'
+  textStyle: {
+    fontSize: 16
   }
 })
 const mapStateToProps = (state) => ({
