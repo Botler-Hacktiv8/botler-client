@@ -40,7 +40,6 @@ class ListTaskPage extends Component {
             let datej = new Date(rawData[j].timeStart).toGMTString().substring(0, 16)
             let hours = new Date(rawData[j].timeStart).getHours();
             let minutes = new Date(rawData[j].timeStart).getMinutes();
-            console.log(`${hours}:${minutes}`)
             let time = hours + ':' + minutes
             if ( datei === datej ) {
               dataArr.push({
