@@ -23,7 +23,6 @@ class ListTaskPage extends Component {
 
   compileData = () => {
     let rawData = this.props.taskData
-    console.log('rawData: ', rawData)
     if (rawData.length !== 0) {
       rawData = rawData.sort(function(a,b){return new Date(a.timeStart) - new Date(b.timeStart)})
       let finalData = [];
@@ -39,10 +38,12 @@ class ListTaskPage extends Component {
           let dataArr = []
           for (let j = 0; j < rawData.length; j++) {
             let datej = new Date(rawData[j].timeStart).toGMTString().substring(0, 16)
-            let time = rawData[j].timeStart.split('T')
+            let hours = new Date(rawData[j].timeStart).getHours();
+            let minutes = new Date(rawData[j].timeStart).getMinutes();
+            let time = hours + ':' + minutes
             if ( datei === datej ) {
               dataArr.push({
-                time: time[1].substring(0, 5),
+                time: time,
                 title: rawData[j].text,
                 description: rawData[j].locationName + ', ' + rawData[j].address,
                 _id: rawData[j]._id

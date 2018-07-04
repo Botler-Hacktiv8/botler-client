@@ -176,7 +176,8 @@ class TaskDetailPage extends Component {
           <View style={{ flexDirection: 'row' }}>
             <View style={ styles.timeStyle }>
               <FormLabel>Time Start:</FormLabel>
-              <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeStart).toGMTString().substring(0, 25)}</Text>
+              <Text style={{ textAlign: 'center' }}>{new Date(this.state.taskDetail.timeStart).toGMTString().substring(0, 16)}</Text>
+              <Text style={{ textAlign: 'center' }}>{new Date(this.state.taskDetail.timeStart).getHours() + `:` + new Date(this.state.taskDetail.timeEnd).getMinutes()}</Text>
             </View>
             <View style={ styles.timeStyle }>
               <Icon
@@ -187,7 +188,8 @@ class TaskDetailPage extends Component {
             </View>
             <View style={ styles.timeStyle }>
               <FormLabel>Time End:</FormLabel>
-              <Text style={{ width: '60%', textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).toGMTString().substring(0, 25)}</Text>
+              <Text style={{ textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).toGMTString().substring(0, 16)}</Text>
+              <Text style={{ textAlign: 'center' }}>{new Date(this.state.taskDetail.timeEnd).getHours() + `:` + new Date(this.state.taskDetail.timeEnd).getMinutes()}</Text>
             </View>
           </View>
           </View>
@@ -258,7 +260,8 @@ const styles = StyleSheet.create({
   timeStyle: {
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: '28%'
   },
   buttonMap: {
     flexDirection: 'row',
