@@ -138,6 +138,8 @@ class BotPage extends Component {
       locationName,
       text
     }
+    // save chat data
+    this.props.saveChatData(this.state.showChat);
 
     // navigate to confirm page
     this.props.navigation.navigate('Confirm', { payload })
@@ -179,8 +181,7 @@ class BotPage extends Component {
         }
       }
       Tts.speak(botReply.chat);
-      if (botReply.chat
-        .includes('sedang saya proses')) {
+      if (botReply.chat.includes('sedang saya proses')) {
         let dataParameter;
         response.data.result.contexts.forEach(element => {
           if (element.name == 'membuataktivitasbaru-followup') {
