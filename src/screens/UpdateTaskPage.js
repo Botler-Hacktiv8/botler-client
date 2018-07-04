@@ -137,10 +137,14 @@ class UpdateTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-    this.props.updateTaskAction(taskId, payload);
-    this.props.navigation.goBack();
-    ToastAndroid.show('Success Update Task', ToastAndroid.SHORT);
 
+    if (payload.text === '' || payload.address === '' || payload.locationName === '') {
+      ToastAndroid.show('Failed, please input data correctly!', ToastAndroid.LONG);
+    } else {
+      this.props.updateTaskAction(taskId, payload);
+      this.props.navigation.goBack();
+      ToastAndroid.show('Success Update Task', ToastAndroid.SHORT);
+    }
   }
 
   render() {
