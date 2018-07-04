@@ -293,7 +293,8 @@ class BotPage extends Component {
         let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
         let distance = matrix.data.rows[0].elements[0].distance.value / 1000
         let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
-                
+        
+        //Unhandled promise rejection warning
         if (distance >= 3) {
           let allTask = this.props.taskData
           let filteredTasks = allTask.filter(task => {
@@ -301,7 +302,6 @@ class BotPage extends Component {
               return task
             } 
           })
-
           rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
         } else {
           rescheduleAll(filteredTasks, user)
