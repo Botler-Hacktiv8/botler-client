@@ -293,23 +293,24 @@ class BotPage extends Component {
 
         try {
           let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
-          let distance = matrix.data.rows[0].elements[0].distance.value / 1000
-          let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
-
-          let allTask = this.props.taskData
-
-          let filteredTasks = allTask.filter(task => {
-            if (new Date(task.timeStart) > new Date()){
-              return task
-            } 
-          })
-
-          if (distance >= 3 && filteredTasks.length > 0) {
-            rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
-          } else {
-            rescheduleAll(filteredTasks, user)
+          if (matrix) {
+            let distance = matrix.data.rows[0].elements[0].distance.value / 1000
+            let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
+  
+            let allTask = this.props.taskData
+  
+            let filteredTasks = allTask.filter(task => {
+              if (new Date(task.timeStart) > new Date()){
+                return task
+              } 
+            })
+  
+            if (distance >= 3 && filteredTasks.length > 0) {
+              rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
+            } else {
+              rescheduleAll(filteredTasks, user)
+            }
           }
-          
         } catch (err) {          
           console.log('Failed get distance',err)
         }

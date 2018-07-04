@@ -73,7 +73,7 @@ module.exports = {
       title: `Lakukan persiapan untuk aktivitas`,
       message: `Aktivitas pada ${timeBeginActivity} memiliki waktu tempuh ${fireDate[1]}`,
       date: fireDate[0], // new Date(Date.now() + (3 * 1000))
-      bigText: `Aktivitas anda "${objTask.text}" akan dimulai pada ${timeBeginActivity}. Perkiraan waktu tempuh adalah ${fireDate[1]}`,
+      bigText: `Aktivitas anda "${task.text}" akan dimulai pada ${timeBeginActivity}. Perkiraan waktu tempuh adalah ${fireDate[1]}`,
       vibrate: true,
       vibration: 300
     })
