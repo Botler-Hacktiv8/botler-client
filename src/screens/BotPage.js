@@ -290,25 +290,31 @@ class BotPage extends Component {
 
         let user = this.props.userData
 
-        let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
-        let distance = matrix.data.rows[0].elements[0].distance.value / 1000
-        let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
-        
-        //Unhandled promise rejection warning
-        if (distance >= 3) {
+        try {
+          let matrix = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${currentUserCoordinate.latitude},${currentUserCoordinate.longitude}&destinations=${user.address}&key=${GOOGLE_MAPS_API}`)
+          let distance = matrix.data.rows[0].elements[0].distance.value / 1000
+          let travelTimeInSecond = matrix.data.rows[0].elements[0].duration.value
+
           let allTask = this.props.taskData
+
           let filteredTasks = allTask.filter(task => {
             if (new Date(task.timeStart) > new Date()){
               return task
             } 
           })
-          rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
-        } else {
-          rescheduleAll(filteredTasks, user)
+
+          if (distance >= 3 && filteredTasks.length > 0) {
+            rescheduleAll(filteredTasks, user, travelTimeInSecond, currentUserCoordinate)
+          } else {
+            rescheduleAll(filteredTasks, user)
+          }
+          
+        } catch (err) {          
+          console.log('Failed get distance',err)
         }
       },
       (error) => console.log(err),
-      // watch akan berjalan setiap 5 menit
+      // watch will run with 5 min interval
       {timeout: (1000 * 60 * 5)}
     );
   }
