@@ -1,4 +1,4 @@
-import { EXAMPLE_ACTION } from './../action-type';
+import { EXAMPLE_ACTION, SAVE_CHAT, RESET_CHAT } from './../action-type';
 
 const getBotlerData = (payload) => ({
   type: EXAMPLE_ACTION,
@@ -11,3 +11,12 @@ export const getBotlerDataAction = (word) => {
     dispatch(getBotlerData(botlerData))
   }
 }
+
+export const saveChatData = (payload) => ({
+  type: SAVE_CHAT,
+  payload: payload
+})
+
+export const resetChatData = () => ({
+  type: RESET_CHAT
+})

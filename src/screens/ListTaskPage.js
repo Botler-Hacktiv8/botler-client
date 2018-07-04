@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity, Picker } from 'react-native';
+import { Header, Icon } from 'react-native-elements'
 import Timeline from 'react-native-timeline-listview';
 
 import { connect } from 'react-redux';
@@ -8,50 +9,62 @@ class ListTaskPage extends Component {
   constructor() {
     super()
     this.state = {
-      data: [],
-      loading: true
+      data: {},
+      compiledData: [],
+      loading: true,
+      dateArr: [],
+      selectedDate: ''
     }
   }
 
   componentDidMount () {
-    this.compileData()
+    this.compileData();
   }
 
   compileData = () => {
     let rawData = this.props.taskData
-    rawData.sort(function(a, b) {return a.timeStart - b.timeStart})
-    console.log(rawData)
-    let finalData = [];
-    let finishDate = [];
-    for (let i = 0; i < rawData.length; i++) {
-      let dataObj = {}
-      let datei = new Date(rawData[i].timeStart).toGMTString().substring(0, 16)
-      if(finishDate.includes(datei)) {
-        continue;
-      } else {
-        finishDate.push(datei)
-        dataObj.date = datei
-        let dataArr = []
-        for (let j = 0; j < rawData.length; j++) {
-          let datej = new Date(rawData[j].timeStart).toGMTString().substring(0, 16)
-          let time = rawData[j].timeStart.split('T')
-          if ( datei === datej ) {
-            dataArr.push({
-              time: time[1].substring(0, 5),
-              title: rawData[j].text,
-              description: rawData[j].locationName + ', ' + rawData[j].address,
-              _id: rawData[j]._id
-            })
+    console.log('rawData: ', rawData)
+    if (rawData.length !== 0) {
+      rawData = rawData.sort(function(a,b){return new Date(a.timeStart) - new Date(b.timeStart)})
+      let finalData = [];
+      let finishDate = [];
+      for (let i = 0; i < rawData.length; i++) {
+        let dataObj = {}
+        let datei = new Date(rawData[i].timeStart).toGMTString().substring(0, 16)
+        if(finishDate.includes(datei)) {
+          continue;
+        } else {
+          finishDate.push(datei)
+          dataObj.date = datei
+          let dataArr = []
+          for (let j = 0; j < rawData.length; j++) {
+            let datej = new Date(rawData[j].timeStart).toGMTString().substring(0, 16)
+            let time = rawData[j].timeStart.split('T')
+            if ( datei === datej ) {
+              dataArr.push({
+                time: time[1].substring(0, 5),
+                title: rawData[j].text,
+                description: rawData[j].locationName + ', ' + rawData[j].address,
+                _id: rawData[j]._id
+              })
+            }
           }
+          dataObj.data = dataArr
         }
-        dataObj.data = dataArr
+        finalData.push(dataObj)
       }
-      finalData.push(dataObj)
+      this.setState({
+        data: finalData[0],
+        loading: false,
+        dateArr: finishDate,
+        compiledData: finalData,
+        selectedDate: finishDate[0]
+      })
+    } else {
+      this.setState({
+        loading: false
+      })
     }
-    this.setState({
-      data: finalData,
-      loading: false
-    })
   }
 
   viewDetail = (data) => {
@@ -60,28 +73,54 @@ class ListTaskPage extends Component {
     })
   }
 
+  changeDate = (date) => {
+    let newData = {}
+    this.state.compiledData.forEach(data => {
+      if(data.date == date) {
+        newData = data
+      }
+    })
+    this.setState({
+      data: newData,
+      selectedDate: date
+    })
+  }
+
   renderTaskList = () => {
     return (
-       this.state.data.map( (timeData, i) => (
-        <View style={{ flexDirection: 'column', padding: 10 }} key={timeData.date + i}>
-        <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>{timeData.date}</Text>
-        <Timeline 
-          style={styles.list}
-          data={timeData.data}
-          circleSize={20}
-          circleColor='rgb(45,156,219)'
-          lineColor='rgb(45,156,219)'
-          timeContainerStyle={{minWidth:52, marginTop: -5}}
-          timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', padding:5, borderRadius:13}}
-          descriptionStyle={{color:'gray'}}
-          options={{
-            style:{paddingTop:5}
-          }}
-          onEventPress={ (e) => this.viewDetail(e)}
-        />
-        </View>
-      ))
+      <View style={{ flexDirection: 'column', padding: 10 }}>
+      <Timeline 
+        style={styles.list}
+        data={this.state.data.data}
+        circleSize={20}
+        circleColor='rgb(45,156,219)'
+        lineColor='rgb(45,156,219)'
+        timeContainerStyle={{minWidth:52}}
+        timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', padding:5, borderRadius:13}}
+        descriptionStyle={{color:'gray'}}
+        options={{
+          style:{paddingTop:5}
+        }}
+        onEventPress={ (e) => this.viewDetail(e)}
+      />
+      </View>
     );
+  }
+
+  renderPicker = () => {
+    let date = this.state.dateArr.map( (date, i) => {
+      return <Picker.Item key={i} value={date} label={date} />
+    });
+    return (
+      <View style={styles.pickerStyle}>
+        <Picker
+          selectedValue={this.state.selectedDate}
+          style={{ height: 50, width: 200 }}
+          onValueChange={this.changeDate}>
+          {date}
+        </Picker>
+      </View>
+    )
   }
 
   render() {
@@ -91,14 +130,70 @@ class ListTaskPage extends Component {
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       );
-    } else {
+    } else if (this.state.data.date !== undefined ) {
       return (
         <View style={styles.container}>
+          <Header 
+          rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+            <Icon
+              name='plus'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>MY SCHEDULE</Text>
+            }
+          leftComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+        />
+          {this.renderPicker()}
           <ScrollView>
             {this.renderTaskList()}
           </ScrollView>
         </View>
       );
+    }
+    else {
+      return (
+        <View style={styles.container}>
+          <Header 
+          rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+            <Icon
+              name='plus'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>MY SCHEDULE</Text>
+            }
+          leftComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+        />
+          <View style={styles.warningView}>
+            <Text style={styles.warning}>Your schedule is empty...</Text>
+          </View>
+        </View>
+      )
     }
   }
 }
@@ -106,9 +201,8 @@ class ListTaskPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-		paddingTop:65,
-		backgroundColor:'white'
+    backgroundColor:'white',
+    flexDirection: 'column'
   },
   list: {
     flex: 1,
@@ -121,6 +215,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white'
   },
+  pickerStyle: {
+    alignItems: 'center'
+  },
+  warning: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  warningView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 })
 
 const mapStateToProps = (state) => ({

@@ -5,17 +5,15 @@ import {
   View,
   TouchableOpacity,
   AsyncStorage,
-  ScrollView,
-  ToastAndroid
+  ToastAndroid,
+  Image
 } from 'react-native';
-import { FormInput, FormLabel, Button } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { FormInput, FormLabel } from 'react-native-elements'
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getBotlerDataAction } from './../store/botler/action';
-import { black } from 'ansi-colors';
 import axios from 'axios';
 
 class Welcome extends Component {
@@ -44,10 +42,9 @@ class Welcome extends Component {
         this._storeToken(response.headers['x-auth']);
         ToastAndroid.show('Login Success', ToastAndroid.SHORT);
         this.props.screenProps.login();
-        // this.props.navigation.navigate('Home')
       }).catch(() => {
         this.setState({
-          errorMessage: 'email or password not math'
+          errorMessage: 'email or password not match'
         })
       })
   }
@@ -63,10 +60,13 @@ class Welcome extends Component {
   render() {
     return (
         <View style={styles.container}>
-          <Text style={styles.welcome}>
-            BOTLER
-          </Text>
-          <View>
+          <View style={{padding: 15}}>
+            <Image
+              style={{ width: 155, height: 200 }}
+              source={require('../assets/launch_screen.png')}
+            />
+          </View>
+          <View style={styles.loginInfoStyle}>
             <FormLabel>Email</FormLabel>
             <FormInput 
               placeholder="Please enter your email address..."
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: '#ceedff',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -146,5 +146,11 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems:'center',
     justifyContent: 'center',
+  },
+  loginInfoStyle: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    width: '90%'
   }
 });

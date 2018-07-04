@@ -1,4 +1,4 @@
-import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK, SUCCESS_POST, FAILED_POST } from './../action-type';
+import { GET_ALL_TASK, POST_TASK, UPDATE_TASK, DELETE_TASK, SUCCESS_POST, FAILED_POST, RESET_TASK } from './../action-type';
 
 const initialState = {
   taskData: [],
@@ -40,6 +40,11 @@ const reducer = (state = {...initialState}, action) => {
       return {
         ...state,
         successPost: false,
+      }
+    case RESET_TASK: 
+      return {
+        ...state,
+        taskData: [],
       }
     default:
       return state;

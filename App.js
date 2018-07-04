@@ -10,8 +10,9 @@ import ListTaskPage from './src/screens/ListTaskPage';
 import TaskDetailPage from './src/screens/TaskDetailPage';
 import AddTaskPage from './src/screens/AddTaskPage';
 import UpdateTaskPage from './src/screens/UpdateTaskPage';
-import ConfirmPage from './src/screens/ConfirmPage'
-import Welcome from './src/screens/Welcome';
+import ConfirmPage from './src/screens/ConfirmPage';
+import Logout from './src/screens/Logout'
+
 
 // @ redux setup
 import { Provider } from 'react-redux';
@@ -32,11 +33,12 @@ const RootStackNav = createStackNavigator({
 // @ drawer navigation
 const RootDrawerNav = createDrawerNavigator({
   Home: BotPage,
-  ListTask: ListTaskPage,
+  'My Schedule': ListTaskPage,
   Detail: TaskDetailPage,
   Confirm: ConfirmPage,
   AddTask: AddTaskPage,
   UpdateTask: UpdateTaskPage,
+  Logout: Logout
 }, {
   initialRouteName: 'Home'
 })

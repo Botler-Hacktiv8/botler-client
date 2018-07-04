@@ -6,17 +6,18 @@ import {
   StyleSheet,
   TimePickerAndroid,
   DatePickerAndroid,
-  AsyncStorage,
-  ToastAndroid
+  ToastAndroid,
+  ScrollView
 } from 'react-native'
-import { FormInput, FormLabel, Icon } from 'react-native-elements'
+import { FormInput, FormLabel, Icon, Header } from 'react-native-elements'
 
 // @ redux config
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getAllTaskAction, postTaskAction, updateTaskAction, deleteTaskAction } from './../store/task/action';
+import { postTaskAction } from './../store/task/action';
 
 class AddTaskPage extends Component {
+
   static navigationOptions = {
     drawerLabel: () => null
   }
@@ -31,27 +32,13 @@ class AddTaskPage extends Component {
       startTime: 'No Time selected',
       finishDate: 'No Date selected',
       finishTime: 'No Time selected',
-      _UserToken: '',
+      errorMessage: '',
     }
-  }
-
-  componentWillMount() {
-    this._retrieveToken();
-  }
-
-  // @ retrive token from local storage
-  _retrieveToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('UserToken');
-      console.log('Hasil get Token from storage', value);
-      this.setState({ _UserToken: value });
-     } catch (e) {
-       console.log('Failed UserToken from storage', e);
-     }
   }
 
   //@ adding new task to db
   addNewTask = () => {
+    
     const payload = {
       text: this.state.description,
       timeStart: new Date(`${this.state.startDate} ${this.state.startTime}`),
@@ -59,10 +46,25 @@ class AddTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-
-    console.log('ini time start dan end', payload.timeStart, payload.timeEnd)
-    // navigate to confirm page
-    this.props.navigation.navigate('Confirm', { payload }) 
+    
+    if (payload.text === '' || payload.address === '' || payload.locationName === '' || this.state.startDate === 'No Date selected' || this.state.startTime === 'No Time selected' || this.state.finishDate === 'No Date selected' || this.state.finishDate === 'finishTime') {
+      ToastAndroid.show('Failed, please input data correctly!', ToastAndroid.LONG);
+    } else {
+      this.props.postTaskAction(payload);
+      // @ waiting change state
+      ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+      this.props.navigation.navigate('Home');
+    }
+    /*
+    setTimeout(() =>{
+      if (this.props.successPost) {
+        ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+        this.props.navigation.navigate('Home')
+      } else {
+        ToastAndroid.show('Failed Post Task', ToastAndroid.LONG);
+      }
+    }, 1000)
+    */ 
   }
 
   setStartTime = async() => {
@@ -136,7 +138,29 @@ class AddTaskPage extends Component {
     return (
         <ScrollView>
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', margin: 10, paddingTop: 20}}>ADD NEW TASK</Text>
+      <Header 
+          rightComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('AddTask')}>
+            <Icon
+              name='plus'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+          centerComponent={
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>ADD NEW TASK</Text>
+            }
+          leftComponent={
+          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+            <Icon
+              name='bars'
+              type='font-awesome'
+              color='white'
+            />
+          </TouchableOpacity>
+          }
+        />
         <View>
           <FormLabel>Name Of Activity:</FormLabel>
           <FormInput
@@ -192,18 +216,19 @@ class AddTaskPage extends Component {
           </View>
           </View>
         </View>
-        <TouchableOpacity onPress={ this.addNewTask }>
-          <View style={styles.submitButton}>
-            <Icon
-              name='check'
-              type='font-awesome'
-              size={20}
-              color='white'
-            />
-            <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>SUBMIT</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+        <View style={{ alignItems: 'center'}}>
+          <TouchableOpacity onPress={ this.addNewTask }>
+            <View style={styles.submitButton}>
+              <Icon
+                name='check'
+                type='font-awesome'
+                size={20}
+                color='white'
+              />
+              <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}> SUBMIT</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <View style={styles.buttonCancel}>
               <Icon
                 name='times'
@@ -214,22 +239,19 @@ class AddTaskPage extends Component {
               <Text style={{color: 'red', fontSize: 18, fontWeight: 'bold'}}> CANCEL</Text>
             </View>
           </TouchableOpacity>
-      </View>
+        </View>
+        </View>
       </ScrollView>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  taskData: state.taskState.taskData,
   successPost: state.taskState.successPost
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  getAllTaskAction,
   postTaskAction,
-  updateTaskAction,
-  deleteTaskAction
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTaskPage);
@@ -238,7 +260,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
     backgroundColor: 'white'
   },
   button: {
