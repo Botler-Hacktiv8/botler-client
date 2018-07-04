@@ -32,11 +32,13 @@ class AddTaskPage extends Component {
       startTime: 'No Time selected',
       finishDate: 'No Date selected',
       finishTime: 'No Time selected',
+      errorMessage: '',
     }
   }
 
   //@ adding new task to db
   addNewTask = () => {
+    
     const payload = {
       text: this.state.description,
       timeStart: new Date(`${this.state.startDate} ${this.state.startTime}`),
@@ -44,10 +46,15 @@ class AddTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-    this.props.postTaskAction(payload);
-    // @ waiting change state
-    ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
-    this.props.navigation.navigate('Home')
+    
+    if (payload.text === '' || payload.address === '' || payload.locationName === '' || this.state.startDate === 'No Date selected' || this.state.startTime === 'No Time selected' || this.state.finishDate === 'No Date selected' || this.state.finishDate === 'finishTime') {
+      ToastAndroid.show('Failed, please input data correctly!', ToastAndroid.LONG);
+    } else {
+      this.props.postTaskAction(payload);
+      // @ waiting change state
+      ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+      this.props.navigation.navigate('Home');
+    }
     /*
     setTimeout(() =>{
       if (this.props.successPost) {
