@@ -3,7 +3,9 @@ import { View, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity
 import { Header, Icon } from 'react-native-elements'
 import Timeline from 'react-native-timeline-listview';
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { getAllTaskAction } from './../store/task/action';
 
 class ListTaskPage extends Component {
   constructor() {
@@ -19,6 +21,7 @@ class ListTaskPage extends Component {
 
   componentDidMount () {
     this.compileData();
+    this.props.getAllTaskAction();
   }
 
   compileData = () => {
@@ -235,4 +238,8 @@ const mapStateToProps = (state) => ({
   taskData: state.taskState.taskData,
 });
 
-export default connect(mapStateToProps, null)(ListTaskPage);
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getAllTaskAction
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListTaskPage);
