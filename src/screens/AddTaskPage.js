@@ -32,6 +32,7 @@ class AddTaskPage extends Component {
       startTime: 'No Time selected',
       finishDate: 'No Date selected',
       finishTime: 'No Time selected',
+      errorMessage: '',
     }
   }
 
@@ -44,10 +45,16 @@ class AddTaskPage extends Component {
       locationName: this.state.location,
       address: this.state.address,
     }
-    this.props.postTaskAction(payload);
-    // @ waiting change state
-    ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
-    this.props.navigation.navigate('Home')
+
+    if (payload.text === undefined || payload.timeStart === undefined || payload.timeEnd === undefined || payload.locationName === undefined || payload.address) {
+      // this.setState({ errorMessage: 'please input data correctly!' });
+      ToastAndroid.show('Failed, please input data correctly!', ToastAndroid.LONG);
+    } else {
+      this.props.postTaskAction(payload);
+      // @ waiting change state
+      ToastAndroid.show('Success Post Task', ToastAndroid.LONG);
+      this.props.navigation.navigate('Home'); 
+    }
     /*
     setTimeout(() =>{
       if (this.props.successPost) {
