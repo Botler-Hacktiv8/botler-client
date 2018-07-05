@@ -102,7 +102,7 @@ class BotPage extends Component {
       const value = await AsyncStorage.getItem('UserToken');
       this.setState({ userToken: value }, () => {
         this.props.getProfileAction(this.state.userToken);
-        this.props.getAllTaskAction(this.state.userToken);
+        this.props.getAllTaskAction();
       });
      } catch (e) {
        console.log('Failed UserToken from storage', e);
