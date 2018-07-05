@@ -47,7 +47,7 @@ class AddTaskPage extends Component {
       address: this.state.address,
     }
     
-    if (payload.text === '' || payload.address === '' || payload.locationName === '' || this.state.startDate === 'No Date selected' || this.state.startTime === 'No Time selected' || this.state.finishDate === 'No Date selected' || this.state.finishDate === 'finishTime') {
+    if (payload.text === '' || payload.address === '' || payload.locationName === '' || this.state.startDate === 'No Date selected' || this.state.startTime === 'No Time selected' || this.state.finishDate === 'No Date selected' || this.state.finishTime === 'No Time selected') {
       ToastAndroid.show('Failed, please input data correctly!', ToastAndroid.LONG);
     } else {
       this.props.postTaskAction(payload);

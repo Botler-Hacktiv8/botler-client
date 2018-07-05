@@ -20,7 +20,7 @@ class ListTaskPage extends Component {
   }
   
   componentDidMount () {
-    this.props.getAllTaskAction();
+    this.props.getAllTaskAction(this.props.token);
     this.compileData();
   }
 
@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   taskData: state.taskState.taskData,
+  token: state.userState.userData.token
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

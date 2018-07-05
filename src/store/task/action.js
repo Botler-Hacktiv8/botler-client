@@ -4,9 +4,8 @@ import { assignSchedule, cancelSchedule } from './../../lib/assign-schedule';
 import axios from 'axios';
 
 // @ get all task
-export const getAllTaskAction = () => {
-  return (dispatch, getState) => {
-    const token = getState().userState.userData.token;
+export const getAllTaskAction = (token) => {
+  return (dispatch) => {
     axios.get(`http://ec2-18-191-188-60.us-east-2.compute.amazonaws.com/api/tasks`, { headers: { 'x-auth': token } })
       .then(response => {
         dispatch(getAllTask(response.data.tasks));
@@ -39,6 +38,7 @@ export const postTaskAction = (payload) => {
         // @ assign schedule
         assignSchedule(address, destination, timeStart, getState().userState.userData, response.data.task);
         dispatch(postTask(response.data.task));
+        dispatch(getAllTaskAction(token));
       }).catch((e) => {
         console.log('Post task failed!', e);
       })
