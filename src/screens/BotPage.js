@@ -229,8 +229,8 @@ class BotPage extends Component {
   onSpeak = async() => {
     try {
       const spokenText = await SpeechAndroid.startSpeech("talk to Bot", SpeechAndroid.INDONESIAN);
-      if (spokenText == 'lihat aktivitas') {
-        this.props.navigation.navigate('ListTask')
+      if (spokenText == 'lihat aktivitas' || spokenText == 'lihat aktifitas') {
+        this.props.navigation.navigate('My Schedule')
       } else if (spokenText == 'keluar') {
         this.logout()
       } else {
