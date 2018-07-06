@@ -74,3 +74,4 @@ export default class App extends Component {
 
 // @ ignore error
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader', 'Remote debugger']);
+YellowBox.ignoreWarnings([`Warning: Can't call setState (or forceUpdate) on an unmounted component`, 'Module RCTImageLoader', 'Remote debugger']);
